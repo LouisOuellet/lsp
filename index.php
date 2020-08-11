@@ -15,7 +15,7 @@ if(!empty($_POST)){
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="A licensing and update service">
     <meta name="author" content="Louis Ouellet, https://github.com/LouisOuellet">
     <title>Licensing Software Platform</title>
 
