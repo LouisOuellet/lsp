@@ -2,9 +2,6 @@
 if(isset($_GET['license'])){
 	#
 } else {
-	// include('lsp.php');
-	// $License = new LSP('http://localhost/','12345-12345-12345-12345-12345');
-	// exit;
 	if((isset($_GET['p']))&&($_GET['p'] != '')){
 		$page=$_GET['p'];
 	} else {
