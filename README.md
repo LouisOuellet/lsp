@@ -22,7 +22,7 @@ require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
 // If it doesn't, then the class will exit the code and display Invalid License
-$lsp = new LSP($LSP_server,$LSP_license,$LSP_token);
+$lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
 
 // You can start your application now
 echo 'Start Application';
@@ -39,7 +39,7 @@ require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
 // In this case a variable $token->Status will be used to display the application or display an activation form instead.
-$lsp = new LSP($LSP_server,$LSP_license,$LSP_token,TRUE);
+$lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token,TRUE);
 
 // You can start your application now
 if($lsp->Status){
