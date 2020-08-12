@@ -1,4 +1,1 @@
-/config/config.php
-/config/config.php.bak
-/tmp/*
-!/tmp/empty
+config.php

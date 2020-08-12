@@ -1,7 +1,13 @@
 <?php
 if(isset($_GET['license'])){
-	#
+	echo 'Raphy0610+-';
 } else {
+	if(!is_file(dirname(__FILE__,1).'/settings.json')){
+		var_dump(dirname(__FILE__,1).'/settings.json');
+		exit;
+	} else {
+		$settings=json_decode(file_get_contents(dirname(__FILE__,1).'/settings.json'),true);
+	}
 	if((isset($_GET['p']))&&($_GET['p'] != '')){
 		$page=$_GET['p'];
 	} else {

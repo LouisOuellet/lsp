@@ -4,7 +4,16 @@ This software provide licensing and update services for php applications. The li
 
 ## Usage
 
-## Example 1
+##Basics
+```php
+require_once('lsp.php');
+
+$lsp = new LSP($LSP_server,$LSP_license,$LSP_token);
+```
+
+Additionnaly if you want to be able to display an activation form if the application is not validated, you can add TRUE as the 4th argument to LSP. This will tell LSP not to exit the code and instead set a public variable $lsp->Status with the Boolean value of the result.
+
+### Example 1
 ```php
 <?php
 
@@ -13,7 +22,7 @@ require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
 // If it doesn't, then the class will exit the code and display Invalid License
-$token = new LSP('http://localhost/','12345-12345-12345-12345-12345','$2y$10$BnwjifGipuexhkZGoEiIO.3ogtar42OyU/CSYkORpSV69OySS9is2');
+$lsp = new LSP($LSP_server,$LSP_license,$LSP_token);
 
 // You can start your application now
 echo 'Start Application';
@@ -21,7 +30,7 @@ echo 'Start Application';
 exit;
 ```
 
-## Example 2
+### Example 2
 ```php
 <?php
 
@@ -30,10 +39,10 @@ require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
 // In this case a variable $token->Status will be used to display the application or display an activation form instead.
-$token = new LSP('http://localhost/','12345-12345-12345-12345-12345','$2y$10$BnwjifGipuexhkZGoEiIO.3ogtar42OyU/CSYkORpSV69OySS9is2',TRUE);
+$lsp = new LSP($LSP_server,$LSP_license,$LSP_token,TRUE);
 
 // You can start your application now
-if($token->Status){
+if($lsp->Status){
 	echo 'Start Application';
 } else {
 	echo 'Display Activation Form';

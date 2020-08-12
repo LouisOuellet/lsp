@@ -2,7 +2,7 @@
     "smtp":{
         "host": "smtp.domain.com",
         "port": "465",
-        "username": "smtp@domain.com",
+        "username": "monitoring@domain.com",
         "password": "password"
     },
     "send":{
