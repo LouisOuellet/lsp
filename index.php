@@ -11,6 +11,7 @@ if(isset($_GET['license'],$_GET['app'])){
 	if(!empty($_POST)){
 		if(isset($_POST['CreateApp'],$_POST['name'])){
 			if(!empty($_POST['name'])){
+				if(!is_dir(dirname(__FILE__,1).'/apps')){ mkdir(dirname(__FILE__,1).'/apps'); }
 				if(!is_dir(dirname(__FILE__,1).'/apps/'.$_POST['name'])){
 					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name']);
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
@@ -63,22 +64,6 @@ if(isset($_GET['license'],$_GET['app'])){
 			<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 			<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 			<script src="https://kit.fontawesome.com/4f8426d3cf.js" crossorigin="anonymous"></script>
-	    <style>
-	      .bd-placeholder-img {
-	        font-size: 1.125rem;
-	        text-anchor: middle;
-	        -webkit-user-select: none;
-	        -moz-user-select: none;
-	        -ms-user-select: none;
-	        user-select: none;
-	      }
-
-	      @media (min-width: 768px) {
-	        .bd-placeholder-img-lg {
-	          font-size: 3.5rem;
-	        }
-	      }
-	    </style>
 	  </head>
 	  <body class="d-flex flex-column h-100">
 	    <header>

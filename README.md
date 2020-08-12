@@ -2,9 +2,23 @@
 
 This software provide licensing and update services for php applications. The licensing service performs 2 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. So license authentication works as followed. Your application will send a cURL request to the LSP server with the included license. The LSP server will then try to identify it this license exist in its database and only reply when one is found. And it will reply with the Application Token. Which you can then test locally in the application.
 
+## Requirements
+The only requirements as of right now is a web server with php support.
+
+## Tested
+### Hardware
+ * Dual-Core Intel® Core™ i5-4310U CPU @ 2.00GHz
+ * Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)
+ * 7.9 GB memory
+ * 471.5 GB storage (SATA SSD)
+###Software
+ * elementary OS 5.1.7 Hera
+ * Apache/2.4.39 (Unix)
+ * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
+
 ## Usage
 
-##Basics
+###Basics
 ```php
 require_once('lsp.php');
 
