@@ -14,7 +14,7 @@ class LSP {
 
 	public function authenticate($token){
 		if(hash_equals($this->Token, $token)){
-			exit;
+			return TRUE;
 		}
 	}
 }

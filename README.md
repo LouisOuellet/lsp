@@ -5,7 +5,9 @@ This software provide licensing and update services for php applications. The li
 ```php
 require_once('lsp.php');
 $token = new LSP('http://localhost/','12345-12345-12345-12345-12345');
-$token->authenticate($hash);
-
-# Your application
+if($token->authenticate($hash)){
+	# Your application
+} else {
+	echo 'invalid license';
+}
 ```
