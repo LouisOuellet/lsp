@@ -7,7 +7,7 @@ class LSP {
 	public $Update = FALSE;
 
 	public function __construct($server,$app,$license,$hash,$strategy = FALSE){
-		if (strpos(shell_exec("git status -sb"), 'behind') !== false){
+		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
 			$this->Update = TRUE;
 		}
 		$this->cURL = curl_init();
@@ -26,8 +26,10 @@ class LSP {
 			}
 		}
 	}
-	
+
 	public function update($branch = "master"){
-		shell_exec("git pull origin $branch");
+		if($this->Update){
+			shell_exec("git pull origin $branch");
+		}
 	}
 }
