@@ -196,6 +196,8 @@ if(isset($_GET['license'],$_GET['app'])){
 				if(!is_dir(dirname(__FILE__,1).'/apps')){ mkdir(dirname(__FILE__,1).'/apps'); }
 				if(!is_dir(dirname(__FILE__,1).'/apps/'.$_POST['name'])){
 					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name']);
+					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/'.$_POST['name'].'.git');
+					shell_exec("git init --bare ".dirname(__FILE__,1).'/apps/'.$_POST['name'].'/'.$_POST['name'].'.git');
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
 					$json = fopen(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/app.json', 'w');
 					fwrite($json, json_encode($app));
@@ -232,12 +234,7 @@ if(isset($_GET['license'],$_GET['app'])){
 		}
 		if(isset($_POST['DeleteApp'])){
 			if(is_dir(dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp'])){
-				foreach(scandir(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp'].'/') as $file){
-					if(("$file" != "..") and ("$file" != ".")){
-						unlink(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp'].'/'.$file);
-					}
-				}
-				rmdir(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp']);
+				shell_exec("rm -r ".dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp']);
 			}
 		}
 		if(isset($_POST['DeleteUser'])){
