@@ -9,10 +9,25 @@ if(isset($_GET['license'],$_GET['app'])){
 		}
 	}
 } else {
+	if(!is_dir(dirname(__FILE__,1).'/apps')){
+		mkdir(dirname(__FILE__,1).'/apps');
+		if(!file_exists(dirname(__FILE__,1).'/apps/.htaccess')){
+			$htaccess=fopen(dirname(__FILE__,1).'/apps/.htaccess', 'w');
+			fwrite($htaccess, "Order deny,allow\n");
+			fwrite($htaccess, "Deny from all\n");
+			fclose($htaccess);
+		}
+	}
 	if(!empty($_POST)){
 		if((isset($_POST['GetStarted'],$_POST['username'],$_POST['password']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))){
 			if(!file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
 				mkdir(dirname(__FILE__,1).'/users');
+				if(!file_exists(dirname(__FILE__,1).'/users/.htaccess')){
+					$htaccess=fopen(dirname(__FILE__,1).'/users/.htaccess', 'w');
+					fwrite($htaccess, "Order deny,allow\n");
+					fwrite($htaccess, "Deny from all\n");
+					fclose($htaccess);
+				}
 				$user['password']=password_hash($_POST['password'], PASSWORD_DEFAULT);
 				$json = fopen(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json', 'w');
 				fwrite($json, json_encode($user));
@@ -342,7 +357,7 @@ if(isset($_GET['license'],$_GET['app'])){
 							    </thead>
 							    <tbody>
 										<?php foreach(scandir(dirname(__FILE__,1) . '/apps/') as $app){ ?>
-											<?php if(("$app" != "..") and ("$app" != ".")){ ?>
+											<?php if(("$app" != "..") and ("$app" != ".") and ("$app" != ".htaccess")){ ?>
 								        <tr>
 							            <td><?=$app?></td>
 							            <td>
