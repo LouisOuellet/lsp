@@ -52,8 +52,7 @@ if($lsp->Status){
 	// You can start your application now
 	echo 'Start Application';
 } else {
-	echo 'Fingerprint: '.md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME']);
-	$lsp->activate();
+	echo 'Show Activation Form';
 }
 
 exit;

@@ -21,6 +21,9 @@ class LSP {
 		}
 		$this->Fingerprint = md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME']);
 		$this->validate();
+		if(!$this->Status){
+			$this->activate();
+		}
 	}
 
 	public function validate(){
