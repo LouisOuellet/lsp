@@ -5,7 +5,7 @@ This software provide licensing and update services for php applications. The li
 ## Requirements
 The only requirements as of right now is a web server with php support.
 
-## Tested
+## Tested on
 ### Hardware
  * Dual-Core Intel® Core™ i5-4310U CPU @ 2.00GHz
  * Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)

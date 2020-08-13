@@ -16,7 +16,7 @@ class LSP {
 				$this->Status = TRUE;
 			}
 		} else {
-				if(!$strategy){
+			if(!$strategy){
 				echo 'Invalid License';
 				exit;
 			}

@@ -1,4 +1,5 @@
 <?php
+session_start();
 if(isset($_GET['license'],$_GET['app'])){
 	if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
 		$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json'),true);
@@ -8,6 +9,170 @@ if(isset($_GET['license'],$_GET['app'])){
 		}
 	}
 } else {
+	if(!empty($_POST)){
+		if((isset($_POST['GetStarted'],$_POST['username'],$_POST['password']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))){
+			if(!file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
+				mkdir(dirname(__FILE__,1).'/users');
+				$user['password']=password_hash($_POST['password'], PASSWORD_DEFAULT);
+				$json = fopen(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json', 'w');
+				fwrite($json, json_encode($user));
+				fclose($json);
+			}
+		}
+	}
+	if(!is_dir(dirname(__FILE__,1).'/users')){ ?>
+		<!doctype html>
+		<html lang="en" class="h-100">
+		  <head>
+		    <meta charset="utf-8">
+		    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		    <meta name="description" content="A licensing and update service">
+		    <meta name="author" content="Louis Ouellet, https://github.com/LouisOuellet">
+		    <title>Licensing Software Platform</title>
+		    <!-- Bootstrap core CSS -->
+		    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+				<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+				<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+				<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+				<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+				<script src="https://kit.fontawesome.com/4f8426d3cf.js" crossorigin="anonymous"></script>
+				<style>
+					.vertical-input-group .input-group:first-child {
+					  padding-bottom: 0;
+					}
+					.vertical-input-group .input-group:first-child * {
+					  border-bottom-left-radius: 0;
+					  border-bottom-right-radius: 0;
+					}
+					.vertical-input-group .input-group:last-child {
+					  padding-top: 0;
+					}
+					.vertical-input-group .input-group:last-child * {
+					  border-top-left-radius: 0;
+					  border-top-right-radius: 0;
+					}
+					.vertical-input-group .input-group:not(:last-child):not(:first-child) {
+					  padding-top: 0;
+					  padding-bottom: 0;
+					}
+					.vertical-input-group .input-group:not(:last-child):not(:first-child) * {
+					  border-radius: 0;
+					}
+					.vertical-input-group .input-group:not(:first-child) * {
+					  border-top: 0;
+					}
+				</style>
+		  </head>
+		  <body class="pt-5">
+				<form method="post">
+					<div class="container">
+						<div class="border-bottom mb-5">
+							<h4 class="display-4">Create your first user</h4>
+						</div>
+						<div class="form-group">
+							<div class="vertical-input-group">
+								<div class="input-group">
+									<input class="form-control" type="text" name="username" placeholder="Username">
+								</div>
+								<div class="input-group">
+									<input class="form-control" type="password" name="password" placeholder="Password">
+								</div>
+								<div class="input-group">
+									<input class="btn btn-success btn-block" type="submit" name="GetStarted" value="Get Started">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</body>
+		</html>
+		<?php exit;
+	}
+	if(!empty($_POST)){
+		if((isset($_POST['Login'],$_POST['username'],$_POST['password']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))){
+			if(file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
+				$user=json_decode(file_get_contents(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json'),true);
+				if(password_verify($_POST['password'], $user['password'])){
+					$_SESSION['lsp']=$_POST['username'];
+				}
+			}
+		}
+		if(isset($_POST['Logout'])){
+			session_unset();
+			session_destroy();
+			session_start();
+		}
+	}
+	if(!isset($_SESSION['lsp'])){?>
+		<!doctype html>
+		<html lang="en" class="h-100">
+		  <head>
+		    <meta charset="utf-8">
+		    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		    <meta name="description" content="A licensing and update service">
+		    <meta name="author" content="Louis Ouellet, https://github.com/LouisOuellet">
+		    <title>Licensing Software Platform</title>
+		    <!-- Bootstrap core CSS -->
+		    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+				<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+				<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+				<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+				<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+				<script src="https://kit.fontawesome.com/4f8426d3cf.js" crossorigin="anonymous"></script>
+				<style>
+					.vertical-input-group .input-group:first-child {
+					  padding-bottom: 0;
+					}
+					.vertical-input-group .input-group:first-child * {
+					  border-bottom-left-radius: 0;
+					  border-bottom-right-radius: 0;
+					}
+					.vertical-input-group .input-group:last-child {
+					  padding-top: 0;
+					}
+					.vertical-input-group .input-group:last-child * {
+					  border-top-left-radius: 0;
+					  border-top-right-radius: 0;
+					}
+					.vertical-input-group .input-group:not(:last-child):not(:first-child) {
+					  padding-top: 0;
+					  padding-bottom: 0;
+					}
+					.vertical-input-group .input-group:not(:last-child):not(:first-child) * {
+					  border-radius: 0;
+					}
+					.vertical-input-group .input-group:not(:first-child) * {
+					  border-top: 0;
+					}
+				</style>
+		  </head>
+		  <body class="pt-5">
+				<form method="post">
+					<div class="container">
+						<div class="border-bottom mb-5">
+							<h4 class="display-4">Login</h4>
+						</div>
+						<div class="form-group">
+							<div class="vertical-input-group">
+								<div class="input-group">
+									<input class="form-control" type="text" name="username" placeholder="Username">
+								</div>
+								<div class="input-group">
+									<input class="form-control" type="password" name="password" placeholder="Password">
+								</div>
+								<div class="input-group">
+									<input class="btn btn-primary btn-block" type="submit" name="Login" value="Login">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</body>
+		</html>
+		<?php exit;
+	}
 	if(!empty($_POST)){
 		if(isset($_POST['CreateApp'],$_POST['name'])){
 			if(!empty($_POST['name'])){
@@ -23,14 +188,11 @@ if(isset($_GET['license'],$_GET['app'])){
 		}
 		if(isset($_POST['GenKey'],$_POST['amount'],$_GET['name'])){
 			if(is_dir(dirname(__FILE__,1).'/apps/'.$_GET['name'])){
-				function hyphenate($str) {
-					return implode("-", str_split($str, 4));
-				}
 				if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
 					$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
 				}
 				for ($x = 1; $x <= $_POST['amount']; $x++) {
-					$key=hyphenate(md5($_GET['name'].$x.date("Y/m/d h:i:s")));
+					$key=implode("-", str_split(md5($_GET['name'].$x.date("Y/m/d h:i:s")), 4));
 					$keys[$key]=password_hash($key, PASSWORD_DEFAULT);
 				}
 				if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
@@ -39,6 +201,26 @@ if(isset($_GET['license'],$_GET['app'])){
 				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
 				fwrite($json, json_encode($keys));
 				fclose($json);
+			}
+		}
+		if(isset($_POST['DeleteKey'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+				unset($keys[$_POST['DeleteKey']]);
+				unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+				fwrite($json, json_encode($keys));
+				fclose($json);
+			}
+		}
+		if(isset($_POST['DeleteApp'])){
+			if(is_dir(dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp'])){
+				foreach(scandir(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp'].'/') as $file){
+					if(("$file" != "..") and ("$file" != ".")){
+						unlink(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp'].'/'.$file);
+					}
+				}
+				rmdir(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp']);
 			}
 		}
 	}
@@ -79,6 +261,13 @@ if(isset($_GET['license'],$_GET['app'])){
 	              <a class="nav-link" href="https://github.com/LouisOuellet/lsp"><i class="fab fa-github mr-2"></i>GitHub</a>
 	            </li>
 	          </ul>
+						<form class="form-inline my-2 my-lg-0" method="post">
+							<span class="badge badge-primary" style="font-size:18px;margin-top:2px;">
+								<i class="fas fa-user mr-1"></i>
+								<?=$_SESSION['lsp']?>
+							</span>
+		          <button class="btn btn-outline-primary ml-3 my-2 my-sm-0" type="submit" name="Logout">Logout</button>
+		        </form>
 	        </div>
 	      </nav>
 	    </header>
@@ -148,19 +337,25 @@ if(isset($_GET['license'],$_GET['app'])){
 							    <thead>
 						        <tr>
 					            <th>Application</th>
-					            <th>Action</th>
+					            <th style="width:250px;">Action</th>
 						        </tr>
 							    </thead>
 							    <tbody>
-										<?php foreach($directories = scandir(dirname(__FILE__,1) . '/apps/') as $app){ ?>
+										<?php foreach(scandir(dirname(__FILE__,1) . '/apps/') as $app){ ?>
 											<?php if(("$app" != "..") and ("$app" != ".")){ ?>
 								        <tr>
 							            <td><?=$app?></td>
 							            <td>
-														<a href="?p=apps&name=<?=$app?>" class="btn btn-sm btn-primary">
-															<i class="fas fa-eye mr-1"></i>
-															Details
-														</a>
+														<form method="post">
+															<a href="?p=apps&name=<?=$app?>" class="btn btn-sm btn-primary">
+																<i class="fas fa-eye mr-1"></i>
+																Details
+															</a>
+															<button type="submit" name="DeleteApp" value="<?=$app?>" class="btn btn-sm btn-danger">
+																<i class="fas fa-trash-alt mr-1"></i>
+																Delete
+															</button>
+														</form>
 													</td>
 								        </tr>
 											<?php } ?>
@@ -175,20 +370,20 @@ if(isset($_GET['license'],$_GET['app'])){
 								<div class="col-12 border-bottom mb-5 pl-0">
 									<h3 class="display-4">
 										<?=$_GET['name']?>
-										<button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#generate">
-											<i class="fas fa-key mr-1"></i>
-											Generate
-										</button>
-										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#token">
+										<button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#token">
 											<i class="fas fa-ticket-alt mr-1"></i>
 											Get Token Hash
+										</button>
+										<button type="button" class="btn btn-success" data-toggle="modal" data-target="#generate">
+											<i class="fas fa-key mr-1"></i>
+											Generate
 										</button>
 									</h3>
 									<div class="modal fade" id="token" tabindex="-1" role="dialog" aria-hidden="true">
 										<div class="modal-dialog" role="document">
 											<div class="modal-content">
 												<div class="modal-header bg-primary text-light">
-													<h5 class="modal-title"><i class="fas fa-ticket-alt mr-2"></i>Hash</h5>
+													<h5 class="modal-title"><i class="fas fa-hashtag mr-2"></i>Hash</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
@@ -197,7 +392,7 @@ if(isset($_GET['license'],$_GET['app'])){
 													<div class="row">
 														<div class="col-12">
 															<div class="form-group">
-																<textarea class="form-control"><?=password_hash($application['token'], PASSWORD_DEFAULT)?></textarea>
+																<textarea class="form-control" style="resize: none;"><?=password_hash($application['token'], PASSWORD_DEFAULT)?></textarea>
 															</div>
 														</div>
 													</div>
@@ -248,7 +443,7 @@ if(isset($_GET['license'],$_GET['app'])){
 								    <thead>
 							        <tr>
 						            <th>Key</th>
-						            <th>Action</th>
+						            <th style="width:250px;">Action</th>
 							        </tr>
 								    </thead>
 								    <tbody>
@@ -256,10 +451,12 @@ if(isset($_GET['license'],$_GET['app'])){
 								        <tr>
 							            <td><?=$key?></td>
 							            <td>
-														<a href="#" class="btn btn-sm btn-primary">
-															<i class="fas fa-eye mr-1"></i>
-															Details
-														</a>
+														<form method="post">
+															<button type="submit" name="DeleteKey" value="<?=$key?>" class="btn btn-sm btn-danger">
+																<i class="fas fa-trash-alt mr-1"></i>
+																Delete
+															</button>
+														</form>
 													</td>
 								        </tr>
 											<?php } ?>
