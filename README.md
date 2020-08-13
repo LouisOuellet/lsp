@@ -17,7 +17,7 @@ The only requirements as of right now is a web server with php support.
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
 
 ## Usage
-###Basics
+### Basics
 ```php
 require_once('lsp.php');
 
