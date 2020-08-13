@@ -21,7 +21,9 @@ if(isset($_GET['license'],$_GET['app'])){
 	if(!empty($_POST)){
 		if((isset($_POST['GetStarted'],$_POST['username'],$_POST['password']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))){
 			if(!file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
-				mkdir(dirname(__FILE__,1).'/users');
+				if(!is_dir(dirname(__FILE__,1).'/users')){
+					mkdir(dirname(__FILE__,1).'/users');
+				}
 				if(!file_exists(dirname(__FILE__,1).'/users/.htaccess')){
 					$htaccess=fopen(dirname(__FILE__,1).'/users/.htaccess', 'w');
 					fwrite($htaccess, "Order deny,allow\n");
@@ -35,7 +37,7 @@ if(isset($_GET['license'],$_GET['app'])){
 			}
 		}
 	}
-	if(!is_dir(dirname(__FILE__,1).'/users')){ ?>
+	if((!is_dir(dirname(__FILE__,1).'/users'))||(count(scandir(dirname(__FILE__,1).'/users')) <= 3)){ ?>
 		<!doctype html>
 		<html lang="en" class="h-100">
 		  <head>
@@ -119,7 +121,7 @@ if(isset($_GET['license'],$_GET['app'])){
 			session_start();
 		}
 	}
-	if(!isset($_SESSION['lsp'])){?>
+	if((!isset($_SESSION['lsp']))||(!file_exists(dirname(__FILE__,1).'/users/'.$_SESSION['lsp'].'.json'))){?>
 		<!doctype html>
 		<html lang="en" class="h-100">
 		  <head>
@@ -238,6 +240,31 @@ if(isset($_GET['license'],$_GET['app'])){
 				rmdir(dirname(__FILE__,1) . '/apps/'.$_POST['DeleteApp']);
 			}
 		}
+		if(isset($_POST['DeleteUser'])){
+			if(file_exists(dirname(__FILE__,1).'/users/'.$_POST['DeleteUser'].'.json')){
+				unlink(dirname(__FILE__,1).'/users/'.$_POST['DeleteUser'].'.json');
+			}
+		}
+		if((isset($_POST['SaveUser'],$_POST['password'],$_POST['password2']))&&(!empty($_POST['password']))&&(!empty($_POST['password2']))){
+			if($_POST['password'] == $_POST['password2']){
+				unlink(dirname(__FILE__,1) . '/users/'.$_GET['name'].'.json');
+				$user['password']=password_hash($_POST['password'], PASSWORD_DEFAULT);
+				$json = fopen(dirname(__FILE__,1).'/users/'.$_GET['name'].'.json', 'w');
+				fwrite($json, json_encode($user));
+				fclose($json);
+			}
+		}
+		if((isset($_POST['CreateUser'],$_POST['username'],$_POST['password'],$_POST['password2']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))&&(!empty($_POST['password2']))){
+			if($_POST['password'] == $_POST['password2']){
+				if(file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
+					unlink(dirname(__FILE__,1) . '/users/'.$_POST['username'].'.json');
+				}
+				$user['password']=password_hash($_POST['password'], PASSWORD_DEFAULT);
+				$json = fopen(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json', 'w');
+				fwrite($json, json_encode($user));
+				fclose($json);
+			}
+		}
 	}
 	if((isset($_GET['p']))&&($_GET['p'] != '')){
 		$page=$_GET['p'];
@@ -269,8 +296,11 @@ if(isset($_GET['license'],$_GET['app'])){
 	        <a class="navbar-brand" href="?p="><i class="fas fa-file-contract mr-2"></i>Licensing Software Platform</a>
 	        <div class="navbar-collapse">
 	          <ul class="navbar-nav mr-auto">
-	            <li class="nav-item">
+							<li class="nav-item">
 	              <a class="nav-link <?php if($page == 'apps'){ echo 'active'; }?>" href="?p=apps"><i class="fas fa-code mr-2"></i>Apps</a>
+	            </li>
+							<li class="nav-item">
+	              <a class="nav-link <?php if($page == 'users'){ echo 'active'; }?>" href="?p=users"><i class="fas fa-users mr-2"></i>Users</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="https://github.com/LouisOuellet/lsp"><i class="fab fa-github mr-2"></i>GitHub</a>
@@ -478,6 +508,126 @@ if(isset($_GET['license'],$_GET['app'])){
 								    </tbody>
 									</table>
 								<?php } ?>
+							</div>
+						<?php } break;
+					case "users":
+						if((!isset($_GET['name']))||(!is_file(dirname(__FILE__,1).'/users/'.$_GET['name'].'.json'))){?>
+							<div class="container pt-4">
+								<div class="col-12 border-bottom mb-5 pl-0">
+									<h3 class="display-4">
+										Your Users
+										<button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#new">
+											<i class="fas fa-plus mr-1"></i>
+											New
+										</button>
+									</h3>
+									<form method="post">
+										<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-hidden="true">
+										  <div class="modal-dialog" role="document">
+										    <div class="modal-content">
+										      <div class="modal-header bg-success text-light">
+										        <h5 class="modal-title"><i class="fas fa-plus mr-2"></i>New User</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true">&times;</span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+														<div class="row">
+															<div class="col-12">
+																<div class="form-group">
+													        <div class="input-group">
+													          <div class="input-group-prepend">
+													            <span class="input-group-text">
+													              <i class="fas fa-user mr-2"></i>Username
+													            </span>
+													          </div>
+													          <input type="text" class="form-control" name="username" placeholder="Username">
+													        </div>
+													      </div>
+																<div class="form-group">
+													        <div class="input-group">
+													          <div class="input-group-prepend">
+													            <span class="input-group-text">
+													              <i class="fas fa-user mr-2"></i>Password
+													            </span>
+													          </div>
+													          <input type="password" class="form-control" name="password" placeholder="Password">
+													          <input type="password" class="form-control" name="password2" placeholder="Confirm Password">
+													        </div>
+													      </div>
+															</div>
+														</div>
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										        <button type="submit" name="CreateUser" class="btn btn-success"><i class="fas fa-plus mr-1"></i>Create</button>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+									</form>
+								</div>
+								<table class="table table-striped display">
+							    <thead>
+						        <tr>
+					            <th>User</th>
+					            <th style="width:250px;">Action</th>
+						        </tr>
+							    </thead>
+							    <tbody>
+										<?php foreach(scandir(dirname(__FILE__,1) . '/users/') as $user){ ?>
+											<?php if(("$user" != "..") and ("$user" != ".") and ("$user" != ".htaccess")){ ?>
+								        <tr>
+							            <td><?=str_replace('.json','',$user)?></td>
+							            <td>
+														<form method="post">
+															<a href="?p=users&name=<?=str_replace('.json','',$user)?>" class="btn btn-sm btn-primary">
+																<i class="fas fa-eye mr-1"></i>
+																Details
+															</a>
+															<button type="submit" name="DeleteUser" value="<?=str_replace('.json','',$user)?>" class="btn btn-sm btn-danger">
+																<i class="fas fa-trash-alt mr-1"></i>
+																Delete
+															</button>
+														</form>
+													</td>
+								        </tr>
+											<?php } ?>
+										<?php } ?>
+							    </tbody>
+								</table>
+							</div>
+						<?php } else {
+							$user=json_decode(file_get_contents(dirname(__FILE__,1).'/users/'.$_GET['name'].'.json'),true);
+							?>
+							<div class="container pt-4">
+								<div class="col-12 border-bottom mb-5 pl-0">
+									<h3 class="display-4">
+										<?=$_GET['name']?>
+									</h3>
+								</div>
+								<div class="container">
+									<form method="post">
+										<div class="row">
+											<div class="col-12">
+												<div class="form-group">
+													<div class="input-group">
+														<div class="input-group-prepend">
+															<span class="input-group-text">
+																<i class="fas fa-lock mr-2"></i>Update Password
+															</span>
+														</div>
+														<input type="password" class="form-control" name="password" placeholder="Password">
+														<input type="password" class="form-control" name="password2" placeholder="Confirm Password">
+														<div class="input-group-append">
+															<button type="submit" name="SaveUser" class="btn btn-success"><i class="fas fa-save mr-1"></i>Save</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
 							</div>
 						<?php } break;
 					default:?>

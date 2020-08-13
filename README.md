@@ -6,6 +6,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - Added .htaccess files to the users & apps directories to prevent unauthorized access
  * [2020-08-13] - Added a login system
  * [2020-08-13] - Added verification for the existence of both apps and users directories. If missing, the system will create them.
+ * [2020-08-13] - Added users CRUD
 
 ## Requirements
 The only requirements as of right now is a web server with php support.
