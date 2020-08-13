@@ -4,8 +4,12 @@ class LSP {
 	private $cURL;
 	private $Token;
 	public $Status = FALSE;
+	public $Update = FALSE;
 
 	public function __construct($server,$app,$license,$hash,$strategy = FALSE){
+		if (strpos(shell_exec("git status -sb"), 'behind') !== false){
+			$this->Update = TRUE;
+		}
 		$this->cURL = curl_init();
 		curl_setopt($this->cURL, CURLOPT_URL, $server.'?app='.$app.'&license='.$license);
 		curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, 1);
@@ -21,5 +25,9 @@ class LSP {
 				exit;
 			}
 		}
+	}
+	
+	public function update($branch = "master"){
+		shell_exec("git pull origin $branch");
 	}
 }

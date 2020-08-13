@@ -61,14 +61,52 @@ exit;
 require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-// In this case a variable $token->Status will be used to display the application or display an activation form instead.
 $lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token,TRUE);
 
-// You can start your application now
+// In this case a variable $token->Status will be used to display the application or display an activation form instead.
 if($lsp->Status){
+	// You can start your application now
 	echo 'Start Application';
 } else {
 	echo 'Display Activation Form';
+}
+
+exit;
+```
+
+### Example 3
+```php
+<?php
+
+// We need to include the LSP Class
+require_once('lsp.php');
+
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token,TRUE);
+
+// You can check for updates
+if($lsp->Update){
+	// We install the update
+	$lsp->update();
+}
+
+exit;
+```
+
+### Example 4
+```php
+<?php
+
+// We need to include the LSP Class
+require_once('lsp.php');
+
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token,TRUE);
+
+// You can check for updates
+if($lsp->Update){
+	// We install the update from the branch Example
+	$lsp->update('Example');
 }
 
 exit;
