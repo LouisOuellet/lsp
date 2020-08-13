@@ -4,10 +4,15 @@
 require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-// If it doesn't, then the class will exit the code and display Invalid License
-$token = new LSP('http://localhost/','Example','1f95-9552-f106-10eb-9ddc-3424-3e03-8d11','$2y$10$.j2r8zvBr74KOvLqCqhc8eExzuSCpNzpIP6SlkY7s30DmZDYEsI92');
+$lsp = new LSP('http://localhost/','Example','73b2-ce60-d953-03e8-65a5-f155-35fd-95da','$2y$10$rY6jd5gZE1ISJ7kPtE9kIODgi/7EBNrv0TQF1iyPIbY8GuiUvGZYa');
 
-// You can start your application now
-echo 'Start Application';
+// In this case a variable $token->Status will be used to display the application or display an activation form instead.
+if($lsp->Status){
+	// You can start your application now
+	echo 'Start Application';
+} else {
+	echo 'Fingerprint: '.md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME']);
+	$lsp->activate();
+}
 
 exit;

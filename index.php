@@ -1,11 +1,34 @@
 <?php
 session_start();
-if(isset($_GET['license'],$_GET['app'])){
+if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 	if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
 		$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json'),true);
 		$app=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/app.json'),true);
-		if((isset($keys[$_GET['license']]))&&(password_verify($_GET['license'], $keys[$_GET['license']]))){
-			echo $app['token'];
+		switch($_GET['action']){
+			case"validate":
+				if(isset($keys[$_GET['license']])){
+					if(($keys[$_GET['license']]['active'])&&($keys[$_GET['license']]['status'])){
+						if((password_verify($_GET['fingerprint'], $keys[$_GET['license']]['fingerprint']))&&(password_verify($_GET['license'], $keys[$_GET['license']]['hash']))){
+							echo $app['token'];
+						}
+					}
+				}
+				break;
+			case"activate":
+				if(isset($keys[$_GET['license']])){
+					if((!$keys[$_GET['license']]['active'])&&($keys[$_GET['license']]['status'])){
+						$keys[$_GET['license']]['active']=TRUE;
+						$keys[$_GET['license']]['fingerprint']=password_hash($_GET['fingerprint'], PASSWORD_DEFAULT);
+						if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
+							unlink(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json');
+							$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json', 'w');
+							fwrite($json, json_encode($keys));
+							fclose($json);
+							echo $app['token'];
+						}
+					}
+				}
+				break;
 		}
 	}
 } else {
@@ -212,7 +235,11 @@ if(isset($_GET['license'],$_GET['app'])){
 				}
 				for ($x = 1; $x <= $_POST['amount']; $x++) {
 					$key=implode("-", str_split(md5($_GET['name'].$x.date("Y/m/d h:i:s")), 4));
-					$keys[$key]=password_hash($key, PASSWORD_DEFAULT);
+					$keys[$key]=[
+						'hash' => password_hash($key, PASSWORD_DEFAULT),
+						'status' => FALSE,
+						'active' => FALSE,
+					];
 				}
 				if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
 					unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
@@ -230,6 +257,65 @@ if(isset($_GET['license'],$_GET['app'])){
 				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
 				fwrite($json, json_encode($keys));
 				fclose($json);
+			}
+		}
+		if(isset($_POST['StatusEnable'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+				$keys[$_POST['StatusEnable']]['status']=TRUE;
+				unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+				fwrite($json, json_encode($keys));
+				fclose($json);
+			}
+		}
+		if(isset($_POST['StatusDisable'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+				$keys[$_POST['StatusDisable']]['status']=FALSE;
+				unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+				fwrite($json, json_encode($keys));
+				fclose($json);
+			}
+		}
+		if(isset($_POST['Activate'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+				$keys[$_POST['Activate']]['active']=TRUE;
+				unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+				fwrite($json, json_encode($keys));
+				fclose($json);
+			}
+		}
+		if(isset($_POST['Deactivate'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+				$keys[$_POST['Deactivate']]['active']=FALSE;
+				unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+				$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+				fwrite($json, json_encode($keys));
+				fclose($json);
+			}
+		}
+		if(isset($_POST['SaveKey'],$_GET['name'])){
+			if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json')){
+				if(isset($_POST['owner'])){
+					$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+					$keys[$_POST['SaveKey']]['owner']=$_POST['owner'];
+					unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+					$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+					fwrite($json, json_encode($keys));
+					fclose($json);
+				} else {
+					$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true);
+					unset($keys[$_POST['SaveKey']]['owner']);
+					unlink(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json');
+					$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json', 'w');
+					fwrite($json, json_encode($keys));
+					fclose($json);
+				}
 			}
 		}
 		if(isset($_POST['DeleteApp'])){
@@ -484,14 +570,66 @@ if(isset($_GET['license'],$_GET['app'])){
 									<table class="table table-striped display">
 								    <thead>
 							        <tr>
-						            <th>Key</th>
-						            <th style="width:250px;">Action</th>
+						            <th class="col-4">Key</th>
+												<th style="width:100px;">Status</th>
+												<th>Owner</th>
+												<th style="width:100px;">Active</th>
+						            <th style="width:100px;">Action</th>
 							        </tr>
 								    </thead>
 								    <tbody>
-											<?php foreach(json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true) as $key => $hash){ ?>
+											<?php foreach(json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true) as $key => $value){ ?>
 								        <tr>
 							            <td><?=$key?></td>
+													<td>
+														<form method="post">
+															<?php if($value['status']){ ?>
+																<button type="submit" name="StatusDisable" value="<?=$key?>" class="btn btn-sm btn-success">
+																	<i class="fas fa-key mr-1"></i>
+																	Enabled
+																</button>
+															<?php } else { ?>
+																<button type="submit" name="StatusEnable" value="<?=$key?>" class="btn btn-sm btn-danger">
+																	<i class="fas fa-key mr-1"></i>
+																	Disabled
+																</button>
+															<?php } ?>
+														</form>
+													</td>
+													<td>
+														<form method="post">
+															<?php if(isset($value['owner'])){ ?>
+																<button type="submit" name="SaveKey" value="<?=$key?>" class="btn btn-sm btn-primary">
+																	<i class="fas fa-building mr-1"></i>
+																	<?=$value['owner']?>
+																</button>
+															<?php } else { ?>
+																<div class="form-group">
+													        <div class="input-group">
+													          <input type="text" class="form-control" name="owner" placeholder="Owner">
+																		<div class="input-group-append">
+																			<button type="submit" name="SaveKey" value="<?=$key?>" class="btn btn-primary"><i class="fas fa-save mr-1"></i>Save</button>
+																		</div>
+													        </div>
+													      </div>
+															<?php } ?>
+														</form>
+													</td>
+													<td>
+														<form method="post">
+															<?php if($value['active']){ ?>
+																<button type="submit" name="Deactivate" value="<?=$key?>" class="btn btn-sm btn-success">
+																	<i class="fas fa-key mr-1"></i>
+																	Activated
+																</button>
+															<?php } else { ?>
+																<button type="submit" name="Activate" value="<?=$key?>" class="btn btn-sm btn-danger">
+																	<i class="fas fa-key mr-1"></i>
+																	Deactivated
+																</button>
+															<?php } ?>
+														</form>
+													</td>
 							            <td>
 														<form method="post">
 															<button type="submit" name="DeleteKey" value="<?=$key?>" class="btn btn-sm btn-danger">
