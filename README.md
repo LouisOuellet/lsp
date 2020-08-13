@@ -39,7 +39,7 @@ $lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
 
 Additionnaly if you want to be able to display an activation form if the application is not validated, you can add TRUE as the 5th argument to LSP. This will tell LSP not to exit the code and instead set a public variable $lsp->Status with the Boolean value of the result.
 
-### Example 1
+### Example
 ```php
 // We need to include the LSP Class
 require_once('lsp.php');
