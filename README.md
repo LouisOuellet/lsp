@@ -8,6 +8,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - Added verification for the existence of both apps and users directories. If missing, the system will create them.
  * [2020-08-13] - Added users CRUD.
  * [2020-08-13] - Now creates and initializes a Git repository within the apps folder during creation of an application.
+ * [2020-08-13] - Update system started
 
 ## Requirements
  * Apache2
