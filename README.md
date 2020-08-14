@@ -3,6 +3,9 @@
 This software provide licensing services for applications. The licensing service performs 2 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. So license authentication works as followed. Your application will send a cURL request to the LSP server with the included license. The LSP server will then try to identify it this license exist in its database and only reply when one is found. And it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server.
 
 ## Change Log
+ * [2020-08-14] - Added support for Git clone using ssh.
+ * [2020-08-14] - Added a MySQL Database Structure backup method to LSP
+ * [2020-08-14] - Added a MySQL Database Structure import method to LSP
  * [2020-08-13] - Added .htaccess files to the users & apps directories to prevent unauthorized access.
  * [2020-08-13] - Added a login system.
  * [2020-08-13] - Added verification for the existence of both apps and users directories. If missing, the system will create them.
@@ -17,6 +20,7 @@ This software provide licensing services for applications. The licensing service
  * PHP
  	 * Allow shell_exec module
  * Git-Core
+ * MySQL
 
 ## Tested on
 ### Hardware
@@ -28,6 +32,7 @@ This software provide licensing services for applications. The licensing service
  * elementary OS 5.1.7 Hera
  * Apache/2.4.39 (Unix)
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
+ * MySQL Ver 15.1 Distrib 10.1.39-MariaDB
 
 ## Usage
 ### Licensing
