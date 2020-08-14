@@ -24,7 +24,7 @@ class LSP {
 		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
 			$this->Update = TRUE;
 		}
-		$this->Fingerprint = md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME']);
+		$this->Fingerprint = md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_SOFTWARE'].$_SERVER['DOCUMENT_ROOT'].$_SERVER['SCRIPT_FILENAME'].$_SERVER['GATEWAY_INTERFACE'].$_SERVER['PATH']);
 		$this->validate();
 		if(!$this->Status){
 			$this->activate();
