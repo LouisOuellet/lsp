@@ -3,6 +3,11 @@
 This software provide licensing services for applications. The licensing service performs 2 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. So license authentication works as followed. Your application will send a cURL request to the LSP server with the included license. The LSP server will then try to identify it this license exist in its database and only reply when one is found. And it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server.
 
 ## Change Log
+ * [2020-08-14] - Added support for Git clone using ssh.
+ * [2020-08-14] - Added a MySQL Database Structure backup method to LSP
+ * [2020-08-14] - Added a MySQL Database Structure import method to LSP
+ * [2020-08-14] - Added a button "Clone" in the app page to get the repository
+ * [2020-08-14] - Improved fingerprint
  * [2020-08-13] - Added .htaccess files to the users & apps directories to prevent unauthorized access.
  * [2020-08-13] - Added a login system.
  * [2020-08-13] - Added verification for the existence of both apps and users directories. If missing, the system will create them.
@@ -13,7 +18,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - An activation process has been added
 
 ## Requirements
- * Apache2
+ * Apache2 => Configured to use the git user
  * PHP
  	 * Allow shell_exec module
  * Git-Core
@@ -28,28 +33,77 @@ This software provide licensing services for applications. The licensing service
  * elementary OS 5.1.7 Hera
  * Apache/2.4.39 (Unix)
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
+ * MySQL Ver 15.1 Distrib 10.1.39-MariaDB
 
 ## Usage
-### Basics
+### Licensing
+#### Basics
 ```php
 require_once('lsp.php');
 $lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
 ```
 
-### Example
+#### Example
 ```php
 // We need to include the LSP Class
 require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-$lsp = new LSP('http://localhost/','Example','73b2-ce60-d953-03e8-65a5-f155-35fd-95da','$2y$10$rY6jd5gZE1ISJ7kPtE9kIODgi/7EBNrv0TQF1iyPIbY8GuiUvGZYa');
+$lsp = new LSP('host','application','key','token');
 
-// In this case a variable $lsp->Status will be used to display the application or display an activation form instead.
+// In this case a variable $lsp->Status will be used to
+// display the application or display an activation form instead.
 if($lsp->Status){
 	// You can start your application now
 	echo 'Start Application';
 } else {
 	echo 'Show Activation Form';
+}
+
+exit;
+```
+### Update Service
+#### Basics
+LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so.
+
+```bash
+git clone git@[host]:[local directory]/git/[App Name].git
+```
+
+This setup will allow you to use git to provide updates to your application. Git is really useful to update the local files since you can preset directory or files that should be ignored using a .gitignore file in your repository. But what do we do for a mysql database. LSP comes with a method that allow us to compare a json file with your database structure and alter your database to match the json file. You can create the JSON file like this. Bare in mind that LSP will still require a valide license to create the file.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+// We configure our database access
+$lsp->configdb('host', 'username', 'password', 'example');
+// We backup the database structure in a JSON file
+$lsp->create('db.json');
+```
+
+#### Example
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+
+// In this case a variable $lsp->Update will be used to
+// display the start the update or report no update.
+if($lsp->Update){
+	// You can start your application now
+	echo 'Start Updating';
+	// We configure our database access
+	$lsp->configdb('host', 'username', 'password', 'example');
+	// We update the local files
+	$lsp->update();
+	// We start updating our database
+	$lsp->updatedb('db.json');
+} else {
+	echo 'No update available';
 }
 
 exit;
