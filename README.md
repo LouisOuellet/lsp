@@ -20,7 +20,6 @@ This software provide licensing services for applications. The licensing service
  * PHP
  	 * Allow shell_exec module
  * Git-Core
- * MySQL
 
 ## Tested on
 ### Hardware
