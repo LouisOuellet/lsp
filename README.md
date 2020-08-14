@@ -96,7 +96,7 @@ if($lsp->Update){
 	// We configure our database access
 	$lsp->configdb('localhost', 'username', 'password', 'example');
 	// We update the local files
-	$lsp->update('branch');
+	$lsp->update();
 	// We start updating our database
 	$lsp->updatedb('db.json');
 } else {
