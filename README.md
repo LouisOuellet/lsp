@@ -1,6 +1,6 @@
 # Licensing Software Platform
 
-This software provide licensing services for applications. The licensing service performs 2 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. So license authentication works as followed. Your application will send a cURL request to the LSP server with the included license. The LSP server will then try to identify it this license exist in its database and only reply when one is found. And it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server.
+This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check.
 
 ## Change Log
  * [2020-08-14] - Added support for Git clone using ssh.
@@ -18,13 +18,19 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - The validation process now validates a fingerprint taken from the application
  * [2020-08-13] - An activation process has been added
 
-## Requirements
+## Requirements for the LSP Server
  * Apache2 => Configured to use the git user
  * PHP
  	 * Allow shell_exec module
  * Git-Core
 
-## Tested on
+## Requirements for the LSP Class
+ * PHP
+ 	 * Allow shell_exec module (for the updates features)
+ * Git-Core (for the updates features)
+ * MySQL (Optional)
+
+## Testing environment
 ### Hardware
  * Dual-Core Intel® Core™ i5-4310U CPU @ 2.00GHz
  * Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)
