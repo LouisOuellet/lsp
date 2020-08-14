@@ -817,7 +817,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 							<div class="row">
 								<div class="col-md-4">
 									<h2>Get Started</h2>
-									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github"></i>GitHub.</p>
+									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
 								</div>
 								<div class="col-md-4">
 									<h2>License Services</h2>
