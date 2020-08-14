@@ -821,11 +821,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								</div>
 								<div class="col-md-4">
 									<h2>License Services</h2>
-									<p>This software makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app.</p>
+									<p>LSP makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app. By default, all license are disabled during creation. They will need to be Enabled for an application to authenticate it's license and activate it. Licenses are limited to 1 per instance of the application.</p>
 								</div>
 								<div class="col-md-4">
 									<h2>Update Services</h2>
-									<p>LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during updates.</p>
+									<p>LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will take care of the rest.</p>
 								</div>
 							</div>
 						</div>
