@@ -816,18 +816,18 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 						<div class="container">
 							<div class="row">
 								<div class="col-md-4">
-									<h2>License Services</h2>
-									<p>This software makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app.</p>
-									<p><a class="btn btn-secondary" href="#" role="button">View details<i class="fas fa-chevron-right ml-2"></i></a></p>
-								</div>
-								<div class="col-md-4">
-									<h2>Coming soon</h2>
-									<p>I am planning on adding an update service based on git. As you are developping your application, you may need to provide an update system to it. So that your users may fetch new versions of your application.</p>
-									<p><a class="btn btn-secondary" href="#" role="button">View details<i class="fas fa-chevron-right ml-2"></i></a></p>
-								</div>
-								<div class="col-md-4">
 									<h2>Get Started</h2>
 									<p>To get started, you need to create your first application and generate some key(s). Then you will need to add the LSP class to your application as described on github.</p>
+									<p><a class="btn btn-secondary" href="?p=apps" role="button">View details<i class="fas fa-chevron-right ml-2"></i></a></p>
+								</div>
+								<div class="col-md-4">
+									<h2>License Services</h2>
+									<p>This software makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app.</p>
+									<p><a class="btn btn-secondary" href="https://github.com/LouisOuellet/lsp" role="button">View details<i class="fas fa-chevron-right ml-2"></i></a></p>
+								</div>
+								<div class="col-md-4">
+									<h2>Update Services</h2>
+									<p>LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during updates.</p>
 									<p><a class="btn btn-secondary" href="https://github.com/LouisOuellet/lsp" role="button">View details<i class="fas fa-chevron-right ml-2"></i></a></p>
 								</div>
 							</div>

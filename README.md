@@ -4,10 +4,11 @@ This software provide licensing services for applications. The licensing service
 
 ## Change Log
  * [2020-08-14] - Added support for Git clone using ssh.
- * [2020-08-14] - Added a MySQL Database Structure backup method to LSP
- * [2020-08-14] - Added a MySQL Database Structure import method to LSP
- * [2020-08-14] - Added a button "Clone" in the app page to get the repository
- * [2020-08-14] - Improved fingerprint
+ * [2020-08-14] - Added a MySQL Database Structure backup method to LSP.
+ * [2020-08-14] - Added a MySQL Database Structure import method to LSP.
+ * [2020-08-14] - Added a button "Clone" in the app page to get the repository.
+ * [2020-08-14] - Improved fingerprint.
+ * [2020-08-14] - Updated the welcome page.
  * [2020-08-13] - Added .htaccess files to the users & apps directories to prevent unauthorized access.
  * [2020-08-13] - Added a login system.
  * [2020-08-13] - Added verification for the existence of both apps and users directories. If missing, the system will create them.
