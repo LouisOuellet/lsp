@@ -49,7 +49,7 @@ $lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
 require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-$lsp = new LSP('http://localhost/','Example','73b2-ce60-d953-03e8-65a5-f155-35fd-95da','$2y$10$rY6jd5gZE1ISJ7kPtE9kIODgi/7EBNrv0TQF1iyPIbY8GuiUvGZYa');
+$lsp = new LSP('host','application','key','token');
 
 // In this case a variable $lsp->Status will be used to display the application or display an activation form instead.
 if($lsp->Status){
@@ -75,9 +75,9 @@ This setup will allow you to use git to provide updates to your application. Git
 // We need to include the LSP Class
 require_once('lsp.php');
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-$lsp = new LSP('http://localhost/','Example','3679-01ed-3e09-d7b0-009c-56ce-6f87-9276','$2y$10$QXBDUHl.8IWq1CIMfvB4bejh9Qy.6tairZynorXFcmmF5b4xIUWY2');
+$lsp = new LSP('host','application','key','token');
 // We configure our database access
-$lsp->configdb('localhost', 'username', 'password', 'example');
+$lsp->configdb('host', 'username', 'password', 'example');
 // We backup the database structure in a JSON file
 $lsp->create('db.json');
 ```
@@ -88,14 +88,14 @@ $lsp->create('db.json');
 require_once('lsp.php');
 
 // Checks are done by verifying if the server replied and validating it's reply against the hash.
-$lsp = new LSP('http://localhost/','Example','3679-01ed-3e09-d7b0-009c-56ce-6f87-9276','$2y$10$QXBDUHl.8IWq1CIMfvB4bejh9Qy.6tairZynorXFcmmF5b4xIUWY2');
+$lsp = new LSP('host','application','key','token');
 
 // In this case a variable $lsp->Status will be used to display the application or display an activation form instead.
 if($lsp->Update){
 	// You can start your application now
 	echo 'Start Updating';
 	// We configure our database access
-	$lsp->configdb('localhost', 'username', 'password', 'example');
+	$lsp->configdb('host', 'username', 'password', 'example');
 	// We update the local files
 	$lsp->update();
 	// We start updating our database
