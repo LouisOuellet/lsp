@@ -13,7 +13,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - An activation process has been added
 
 ## Requirements
- * Apache2
+ * Apache2 => Configured to use the git user
  * PHP
  	 * Allow shell_exec module
  * Git-Core
@@ -30,13 +30,14 @@ This software provide licensing services for applications. The licensing service
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
 
 ## Usage
-### Basics
+### Licensing
+#### Basics
 ```php
 require_once('lsp.php');
 $lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
 ```
 
-### Example
+#### Example
 ```php
 // We need to include the LSP Class
 require_once('lsp.php');
@@ -50,6 +51,51 @@ if($lsp->Status){
 	echo 'Start Application';
 } else {
 	echo 'Show Activation Form';
+}
+
+exit;
+```
+### Update Service
+#### Basics
+LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so.
+
+```bash
+git clone git@[host]:[local directory]/git/[App Name].git
+```
+
+This setup will allow you to use git to provide updates to your application. Git is really useful to update the local files since you can preset directory or files that should be ignored using a .gitignore file in your repository. But what do we do for a mysql database. LSP comes with a method that allow us to compare a json file with your database structure and alter your database to match the json file. You can create the JSON file like this. Bare in mind that LSP will still require a valide license to create the file.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('http://localhost/','Example','3679-01ed-3e09-d7b0-009c-56ce-6f87-9276','$2y$10$QXBDUHl.8IWq1CIMfvB4bejh9Qy.6tairZynorXFcmmF5b4xIUWY2');
+// We configure our database access
+$lsp->configdb('localhost', 'username', 'password', 'example');
+// We backup the database structure in a JSON file
+$lsp->create('db.json');
+```
+
+#### Example
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('http://localhost/','Example','3679-01ed-3e09-d7b0-009c-56ce-6f87-9276','$2y$10$QXBDUHl.8IWq1CIMfvB4bejh9Qy.6tairZynorXFcmmF5b4xIUWY2');
+
+// In this case a variable $lsp->Status will be used to display the application or display an activation form instead.
+if($lsp->Update){
+	// You can start your application now
+	echo 'Start Updating';
+	// We configure our database access
+	$lsp->configdb('localhost', 'username', 'password', 'example');
+	// We update the local files
+	$lsp->update('branch');
+	// We start updating our database
+	$lsp->updatedb('db.json');
+} else {
+	echo 'No update available';
 }
 
 exit;

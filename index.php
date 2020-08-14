@@ -41,6 +41,15 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 			fclose($htaccess);
 		}
 	}
+	if(!is_dir(dirname(__FILE__,1).'/git')){
+		mkdir(dirname(__FILE__,1).'/git');
+		if(!file_exists(dirname(__FILE__,1).'/git/.htaccess')){
+			$htaccess=fopen(dirname(__FILE__,1).'/git/.htaccess', 'w');
+			fwrite($htaccess, "Order deny,allow\n");
+			fwrite($htaccess, "Deny from all\n");
+			fclose($htaccess);
+		}
+	}
 	if(!empty($_POST)){
 		if((isset($_POST['GetStarted'],$_POST['username'],$_POST['password']))&&(!empty($_POST['username']))&&(!empty($_POST['password']))){
 			if(!file_exists(dirname(__FILE__,1).'/users/'.$_POST['username'].'.json')){
@@ -217,10 +226,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 		if(isset($_POST['CreateApp'],$_POST['name'])){
 			if(!empty($_POST['name'])){
 				if(!is_dir(dirname(__FILE__,1).'/apps')){ mkdir(dirname(__FILE__,1).'/apps'); }
+				if(!is_dir(dirname(__FILE__,1).'/git')){ mkdir(dirname(__FILE__,1).'/git'); }
 				if(!is_dir(dirname(__FILE__,1).'/apps/'.$_POST['name'])){
 					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name']);
-					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/'.$_POST['name'].'.git');
-					shell_exec("git init --bare ".dirname(__FILE__,1).'/apps/'.$_POST['name'].'/'.$_POST['name'].'.git');
+					mkdir(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
+					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
 					$json = fopen(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/app.json', 'w');
 					fwrite($json, json_encode($app));
@@ -320,7 +330,8 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 		}
 		if(isset($_POST['DeleteApp'])){
 			if(is_dir(dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp'])){
-				shell_exec("rm -r ".dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp']);
+				shell_exec("rm -rf ".dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp']);
+				shell_exec("rm -rf ".dirname(__FILE__,1).'/git/'.$_POST['DeleteApp'].'.git');
 			}
 		}
 		if(isset($_POST['DeleteUser'])){
@@ -498,7 +509,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								<div class="col-12 border-bottom mb-5 pl-0">
 									<h3 class="display-4">
 										<?=$_GET['name']?>
-										<button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#token">
+										<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#clone">
+											<i class="fas fa-clone mr-1"></i>
+											Clone
+										</button>
+										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#token">
 											<i class="fas fa-ticket-alt mr-1"></i>
 											Get Token Hash
 										</button>
@@ -521,6 +536,30 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 														<div class="col-12">
 															<div class="form-group">
 																<textarea class="form-control" style="resize: none;"><?=password_hash($application['token'], PASSWORD_DEFAULT)?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="modal fade" id="clone" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header bg-info text-light">
+													<h5 class="modal-title"><i class="fas fa-clone mr-2"></i>Clone via SSH</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<div class="row">
+														<div class="col-12">
+															<div class="form-group">
+																<textarea class="form-control" style="resize: none;">git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?></textarea>
 															</div>
 														</div>
 													</div>
