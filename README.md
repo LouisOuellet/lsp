@@ -25,10 +25,10 @@ This software provide licensing services for applications. The licensing service
  * Git-Core
 
 ## Requirements for the LSP Class
- * PHP
+ * PHP (Important)
  	 * Allow shell_exec module (for the updates features)
- * Git-Core (for the updates features)
- * MySQL (Optional)
+ * Git-Core (Optional)(for the updates features)
+ * MySQL (Optional)(for the updates features and if your application uses MySQL)
 
 ## Testing environment
 ### Hardware
