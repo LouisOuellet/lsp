@@ -554,7 +554,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 										<div class="modal-dialog" role="document">
 											<div class="modal-content">
 												<div class="modal-header bg-info text-light">
-													<h5 class="modal-title"><i class="fas fa-clone mr-2"></i>Clone via SSH</h5>
+													<h5 class="modal-title"><i class="fas fa-clone mr-2"></i>Clone</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
