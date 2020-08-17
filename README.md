@@ -10,6 +10,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-17] - Adding support for git request over http.
  * [2020-08-17] - Adding http clone link to app page.
  * [2020-08-17] - Added additionnal .htaccess files to limit access to the git folder.
+ * [2020-08-17] - Modified form height within tables.
  * [2020-08-14] - Added support for Git clone using ssh.
  * [2020-08-14] - Added a MySQL Database Structure backup method to LSP.
  * [2020-08-14] - Added a MySQL Database Structure import method to LSP.
