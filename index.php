@@ -561,16 +561,28 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 												</div>
 												<div class="modal-body">
 													<div class="row">
-														<div class="col-12"><h3>Using HTTP</h3></div>
 														<div class="col-12">
 															<div class="form-group">
-																<textarea class="form-control" style="resize: none;"><?=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER['HTTP_HOST'].'/'?>git/<?=$_GET['name']?>.git</textarea>
+																<div class="input-group">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">
+																			<i class="fas fa-globe-americas mr-2"></i>HTTP
+																		</span>
+																	</div>
+																	<input type="text" class="form-control" value="<?=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER['HTTP_HOST'].'/'?>git/<?=$_GET['name']?>.git" >
+																</div>
 															</div>
 														</div>
-														<div class="col-12"><h3>Using SSH</h3></div>
 														<div class="col-12">
 															<div class="form-group">
-																<textarea class="form-control" style="resize: none;">git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?></textarea>
+																<div class="input-group">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">
+																			<i class="fas fa-lock mr-2"></i>SSH
+																		</span>
+																	</div>
+																	<input type="text" class="form-control" value="git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?>" >
+																</div>
 															</div>
 														</div>
 													</div>
