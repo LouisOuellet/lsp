@@ -227,6 +227,13 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name']);
 					mkdir(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
+					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/objects/info/packs', 'w');
+					fwrite($file, json_encode(''));
+					fclose($file);
+					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
+					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/info/refs', 'w');
+					fwrite($file, json_encode(''));
+					fclose($file);
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
 					$json = fopen(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/app.json', 'w');
 					fwrite($json, json_encode($app));

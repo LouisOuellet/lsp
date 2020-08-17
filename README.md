@@ -7,6 +7,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-17] - Adding license validation to the activation process.
  * [2020-08-17] - General code optimization.
  * [2020-08-17] - Improved documentation in README.md.
+ * [2020-08-17] - Adding support for git request over http.
  * [2020-08-14] - Added support for Git clone using ssh.
  * [2020-08-14] - Added a MySQL Database Structure backup method to LSP.
  * [2020-08-14] - Added a MySQL Database Structure import method to LSP.
@@ -28,19 +29,53 @@ This software provide licensing services for applications. The licensing service
  	 * Allow shell_exec module
  * Git-Core
 
-### Configuring apache2 to use git
+### Configuring PHP for LSP
+#### Enable shell_exec function
+In /etc/php/7.3/apache2/php.ini comment the line :
+```php
+disable_functions = ...
+```
+And add :
+```php
+disable_functions = ''
+```
+
+### Configuring apache2 for LSP
+#### Run as git
 If you do not configure apache2 to use git, then lsp will not be able to remove the repository when asked to. And would otherwise require sudo elevation.
 
  1. Open /etc/apache2/apache2.conf with your favorite editor
  2. Comment ```User ${APACHE_RUN_USER}```
  3. Comment ```Group ${APACHE_RUN_GROUP}```
- 4. Insert ``` User git```
- 5. Insert ``` Group git```
+ 4. Insert ```User git```
+ 5. Insert ```Group git```
  6. Restart the service ```sudo service apache2 restart```
 
-### Import your application ssh key to allow updates.
-By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
+#### Configuring WebDAV
+For LSP to provide http access to your application repository, you will need to enable WebDAV.
 
+```bash
+sudo a2enmod dav_fs
+```
+We also need to add this configuration file (git.conf).
+```bash
+Alias /git [local directory]/git
+
+<Directory [local directory]/git>
+  Options +Indexes
+  DAV on
+</Directory>
+```
+And enable it:
+```bash
+sudo a2enconf git
+```
+Finally we restart apache2:
+```bash
+sudo service apache2 restart
+```
+### Import your application ssh key to allow updates via SSH instead
+By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
 ```bash
 ssh-keygen -t rsa
 ssh-copy-id git@[host]
@@ -93,8 +128,12 @@ exit;
 ```
 ### Update Service
 #### Basics
-LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so.
+LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so:
 
+```bash
+git clone [host]/git/[App Name].git
+```
+Or :
 ```bash
 git clone git@[host]:[local directory]/git/[App Name].git
 ```
