@@ -34,8 +34,8 @@ If you do not configure apache2 to use git, then lsp will not be able to remove 
  1. Open /etc/apache2/apache2.conf with your favorite editor
  2. Comment ```User ${APACHE_RUN_USER}```
  3. Comment ```Group ${APACHE_RUN_GROUP}```
- 4. Insert ``` User git```
- 5. Insert ``` Group git```
+ 4. Insert ```User git```
+ 5. Insert ```Group git```
  6. Restart the service ```sudo service apache2 restart```
 
 ### Import your application ssh key to allow updates.
@@ -45,6 +45,8 @@ By default, a ssh connection will require a password to be entered. This can pre
 ssh-keygen -t rsa
 ssh-copy-id git@[host]
 ```
+
+Note: I'll need to figure out a way to allow http request instead to remove this requirement.
 
 ## Requirements for the LSP Class
  * PHP (Important)
