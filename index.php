@@ -17,13 +17,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 					if(!$keys[$_GET['license']]['active']){
 						$keys[$_GET['license']]['active']=TRUE;
 						$keys[$_GET['license']]['fingerprint']=password_hash($_GET['fingerprint'], PASSWORD_DEFAULT);
-						if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
-							unlink(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json');
-							$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json', 'w');
-							fwrite($json, json_encode($keys));
-							fclose($json);
-							echo $app['token'];exit;
-						}
+						unlink(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json');
+						$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json', 'w');
+						fwrite($json, json_encode($keys));
+						fclose($json);
+						echo $app['token'];exit;
 					}
 					break;
 			}

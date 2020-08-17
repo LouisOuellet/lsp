@@ -3,9 +3,10 @@
 This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check.
 
 ## Change Log
- * [2020-08-17] - Improved encryption of the license during request.
+ * [2020-08-17] - Improved encryption of the license during request. To prevent sniffing attacks.
  * [2020-08-17] - Adding license validation to the activation process.
  * [2020-08-17] - General code optimization.
+ * [2020-08-17] - Improved documentation in README.md.
  * [2020-08-14] - Added support for Git clone using ssh.
  * [2020-08-14] - Added a MySQL Database Structure backup method to LSP.
  * [2020-08-14] - Added a MySQL Database Structure import method to LSP.
@@ -26,6 +27,22 @@ This software provide licensing services for applications. The licensing service
  * PHP
  	 * Allow shell_exec module
  * Git-Core
+
+### Configuring apache2 to use git
+If you do not configure apache2 to use git, then lsp will not be able to remove the repository when asked to. And would otherwise require sudo elevation.
+	1. Open /etc/apache2/apache2.conf with your favorite editor
+	2. Comment ```User ${APACHE_RUN_USER}```
+	3. Comment ```Group ${APACHE_RUN_GROUP}```
+	4. Insert ``` User git```
+	5. Insert ``` Group git```
+
+### Import your application ssh key to allow updates.
+By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
+
+```bash
+ssh-keygen -t rsa
+ssh-copy-id git@[host]
+```
 
 ## Requirements for the LSP Class
  * PHP (Important)
