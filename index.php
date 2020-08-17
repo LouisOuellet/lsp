@@ -4,19 +4,17 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 	if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
 		$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json'),true);
 		$app=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/app.json'),true);
-		switch($_GET['action']){
-			case"validate":
-				if(isset($keys[$_GET['license']])){
-					if(($keys[$_GET['license']]['active'])&&($keys[$_GET['license']]['status'])){
-						if((password_verify($_GET['fingerprint'], $keys[$_GET['license']]['fingerprint']))&&(password_verify($_GET['license'], $keys[$_GET['license']]['hash']))){
-							echo $app['token'];
+		if((isset($keys[$_GET['license']]))&&(password_verify($_GET['license'], $keys[$_GET['license']]['hash']))&&($keys[$_GET['license']]['status'])){
+			switch($_GET['action']){
+				case"validate":
+					if($keys[$_GET['license']]['active']){
+						if((password_verify($_GET['fingerprint'], $keys[$_GET['license']]['fingerprint']))){
+							echo $app['token'];exit;
 						}
 					}
-				}
-				break;
-			case"activate":
-				if(isset($keys[$_GET['license']])){
-					if((!$keys[$_GET['license']]['active'])&&($keys[$_GET['license']]['status'])){
+					break;
+				case"activate":
+					if(!$keys[$_GET['license']]['active']){
 						$keys[$_GET['license']]['active']=TRUE;
 						$keys[$_GET['license']]['fingerprint']=password_hash($_GET['fingerprint'], PASSWORD_DEFAULT);
 						if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
@@ -24,11 +22,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 							$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json', 'w');
 							fwrite($json, json_encode($keys));
 							fclose($json);
-							echo $app['token'];
+							echo $app['token'];exit;
 						}
 					}
-				}
-				break;
+					break;
+			}
 		}
 	}
 } else {
@@ -245,8 +243,9 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 				}
 				for ($x = 1; $x <= $_POST['amount']; $x++) {
 					$key=implode("-", str_split(md5($_GET['name'].$x.date("Y/m/d h:i:s")), 4));
-					$keys[$key]=[
-						'hash' => password_hash($key, PASSWORD_DEFAULT),
+					$keys[md5($key)]=[
+						'key' => $key,
+						'hash' => password_hash(md5($key), PASSWORD_DEFAULT),
 						'status' => FALSE,
 						'active' => FALSE,
 					];
@@ -619,7 +618,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								    <tbody>
 											<?php foreach(json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true) as $key => $value){ ?>
 								        <tr>
-							            <td><?=$key?></td>
+							            <td><?=$value['key']?></td>
 													<td>
 														<form method="post">
 															<?php if($value['status']){ ?>

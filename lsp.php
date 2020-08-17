@@ -19,7 +19,7 @@ class LSP {
 	public function __construct($server,$app,$license,$hash){
 		$this->Server = $server;
 		$this->App = $app;
-		$this->License = $license;
+		$this->License = md5($license);
 		$this->Hash = $hash;
 		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
 			$this->Update = TRUE;
@@ -127,41 +127,9 @@ class LSP {
 		return $result;
 	}
 
-  private function fetchArray() {
-    $params = array();
-    $row = array();
-    $meta = $this->query->result_metadata();
-    while ($field = $meta->fetch_field()) {
-      $params[] = &$row[$field->name];
-    }
-    call_user_func_array(array($this->query, 'bind_result'), $params);
-    $result = array();
-		while ($this->query->fetch()) {
-			foreach ($row as $key => $val) {
-				$result[$key] = $val;
-			}
-		}
-    $this->query->close();
-    $this->query_closed = TRUE;
-		return $result;
-	}
-
 	private function close() {
 		return $this->connection->close();
 	}
-
-  private function numRows() {
-		$this->query->store_result();
-		return $this->query->num_rows;
-	}
-
-	private function affectedRows() {
-		return $this->query->affected_rows;
-	}
-
-  private function lastInsertID() {
-  	return $this->connection->insert_id;
-  }
 
 	private function error($error) {
     if ($this->show_errors) {
