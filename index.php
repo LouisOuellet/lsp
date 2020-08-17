@@ -671,7 +671,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 																</button>
 															<?php } else { ?>
 																<div class="form-group">
-													        <div class="input-group">
+													        <div class="input-group input-group-sm">
 													          <input type="text" class="form-control" name="owner" placeholder="Owner">
 																		<div class="input-group-append">
 																			<button type="submit" name="SaveKey" value="<?=$key?>" class="btn btn-primary"><i class="fas fa-save mr-1"></i>Save</button>
