@@ -843,6 +843,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 						<div class="container">
 							<div class="row">
 								<div class="col-md-4">
+									<h1 class="display-3 text-center"><i class="far fa-question-circle"></i></h1>
 									<h2>Get Started</h2>
 									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
 								</div>
