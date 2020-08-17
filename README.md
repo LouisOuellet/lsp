@@ -36,6 +36,7 @@ If you do not configure apache2 to use git, then lsp will not be able to remove 
  3. Comment ```Group ${APACHE_RUN_GROUP}```
  4. Insert ``` User git```
  5. Insert ``` Group git```
+ 6. Restart the service ```sudo service apache2 restart```
 
 ### Import your application ssh key to allow updates.
 By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
