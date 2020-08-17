@@ -234,6 +234,10 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/info/refs', 'w');
 					fwrite($file, json_encode(""));
 					fclose($file);
+					$htaccess=fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/.htaccess', 'w');
+					fwrite($htaccess, "Order deny,allow\n");
+					fwrite($htaccess, "Allow from all\n");
+					fclose($htaccess);
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
 					$json = fopen(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/app.json', 'w');
 					fwrite($json, json_encode($app));
@@ -667,7 +671,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 																</button>
 															<?php } else { ?>
 																<div class="form-group">
-													        <div class="input-group">
+													        <div class="input-group input-group-sm">
 													          <input type="text" class="form-control" name="owner" placeholder="Owner">
 																		<div class="input-group-append">
 																			<button type="submit" name="SaveKey" value="<?=$key?>" class="btn btn-primary"><i class="fas fa-save mr-1"></i>Save</button>
@@ -839,16 +843,19 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 						<div class="container">
 							<div class="row">
 								<div class="col-md-4">
-									<h2>Get Started</h2>
-									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
+									<h1 class="display-3 text-center"><i class="far fa-question-circle"></i></h1>
+									<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Get Started</h2>
+									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class in your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
 								</div>
 								<div class="col-md-4">
-									<h2>License Services</h2>
+									<h1 class="display-3 text-center"><i class="fas fa-key"></i></h1>
+									<h2 class="text-center border-bottom border-secondary mb-3 pb-2">License Services</h2>
 									<p class="text-justify">LSP makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app. By default, all license are disabled during creation. They will need to be Enabled for an application to authenticate it's license and activate it. Licenses are limited to 1 per instance of the application.</p>
 								</div>
 								<div class="col-md-4">
-									<h2>Update Services</h2>
-									<p class="text-justify">LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will take care of the rest.</p>
+									<h1 class="display-3 text-center"><i class="fas fa-code-branch"></i></h1>
+									<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Update Services</h2>
+									<p class="text-justify">LSP support a git server. This allows you to host your own git repositories and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will takes care of the rest.</p>
 								</div>
 							</div>
 						</div>
@@ -857,7 +864,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 	    </main>
 	    <footer class="footer mt-auto py-3" style="padding:10px;background-color:#ccc;">
 	      <div class="float-right d-none d-sm-block">
-	        <b>Version</b> 1.1-0
+	        <b>Version</b> 1.b.2020-08-17
 	      </div>
 	      <strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://albice.com">ALB Compagnie International Inc.</a></strong> All rights reserved.
 	    </footer>
