@@ -245,7 +245,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 				}
 				for ($x = 1; $x <= $_POST['amount']; $x++) {
 					$key=implode("-", str_split(md5($_GET['name'].$x.date("Y/m/d h:i:s")), 4));
-					$keys[$key]=[
+					$keys[md5($key)]=[
 						'key' => $key,
 						'hash' => password_hash(md5($key), PASSWORD_DEFAULT),
 						'status' => FALSE,
