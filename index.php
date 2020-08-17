@@ -561,6 +561,13 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 												</div>
 												<div class="modal-body">
 													<div class="row">
+														<div class="col-12"><h3>Using HTTP</h3></div>
+														<div class="col-12">
+															<div class="form-group">
+																<textarea class="form-control" style="resize: none;"><?=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER['HTTP_HOST'].'/'?><?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?></textarea>
+															</div>
+														</div>
+														<div class="col-12"><h3>Using SSH</h3></div>
 														<div class="col-12">
 															<div class="form-group">
 																<textarea class="form-control" style="resize: none;">git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?></textarea>
