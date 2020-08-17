@@ -864,7 +864,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 	    </main>
 	    <footer class="footer mt-auto py-3" style="padding:10px;background-color:#ccc;">
 	      <div class="float-right d-none d-sm-block">
-	        <b>Version</b> 1.1-0.2020-08-17
+	        <b>Version</b> 1.b.2020-08-17
 	      </div>
 	      <strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://albice.com">ALB Compagnie International Inc.</a></strong> All rights reserved.
 	    </footer>
