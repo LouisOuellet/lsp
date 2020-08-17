@@ -127,6 +127,8 @@ if($lsp->Status){
 exit;
 ```
 ### Update Service
+#### Update the Repository
+With the configuration setup as above, the only way to push an update on the repository is using SSH. This setup provides access control to repository. So a developper would access the repository using SSH. While everyone else will use http request as Read-Only access.
 #### Basics
 LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so:
 

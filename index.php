@@ -228,11 +228,11 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 					mkdir(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/objects/info/packs', 'w');
-					fwrite($file, json_encode(''));
+					fwrite($file, json_encode("\n"));
 					fclose($file);
 					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/info/refs', 'w');
-					fwrite($file, json_encode(''));
+					fwrite($file, json_encode(""));
 					fclose($file);
 					$app['token']=md5($_POST['name'].date("Y/m/d h:i:s"));
 					$json = fopen(dirname(__FILE__,1).'/apps/'.$_POST['name'].'/app.json', 'w');
@@ -554,7 +554,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 										<div class="modal-dialog" role="document">
 											<div class="modal-content">
 												<div class="modal-header bg-info text-light">
-													<h5 class="modal-title"><i class="fas fa-clone mr-2"></i>Clone via SSH</h5>
+													<h5 class="modal-title"><i class="fas fa-clone mr-2"></i>Clone</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
@@ -563,7 +563,26 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 													<div class="row">
 														<div class="col-12">
 															<div class="form-group">
-																<textarea class="form-control" style="resize: none;">git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?></textarea>
+																<div class="input-group">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">
+																			<i class="fas fa-globe-americas mr-2"></i>HTTP
+																		</span>
+																	</div>
+																	<input type="text" class="form-control" value="<?=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER['HTTP_HOST'].'/'?>git/<?=$_GET['name']?>.git" >
+																</div>
+															</div>
+														</div>
+														<div class="col-12">
+															<div class="form-group">
+																<div class="input-group">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">
+																			<i class="fas fa-lock mr-2"></i>SSH
+																		</span>
+																	</div>
+																	<input type="text" class="form-control" value="git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?>" >
+																</div>
 															</div>
 														</div>
 													</div>
