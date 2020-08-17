@@ -30,11 +30,12 @@ This software provide licensing services for applications. The licensing service
 
 ### Configuring apache2 to use git
 If you do not configure apache2 to use git, then lsp will not be able to remove the repository when asked to. And would otherwise require sudo elevation.
-	1. Open /etc/apache2/apache2.conf with your favorite editor
-	2. Comment ```User ${APACHE_RUN_USER}```
-	3. Comment ```Group ${APACHE_RUN_GROUP}```
-	4. Insert ``` User git```
-	5. Insert ``` Group git```
+
+ 1. Open /etc/apache2/apache2.conf with your favorite editor
+ 2. Comment ```User ${APACHE_RUN_USER}```
+ 3. Comment ```Group ${APACHE_RUN_GROUP}```
+ 4. Insert ``` User git```
+ 5. Insert ``` Group git```
 
 ### Import your application ssh key to allow updates.
 By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
