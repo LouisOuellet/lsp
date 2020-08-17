@@ -28,7 +28,12 @@ This software provide licensing services for applications. The licensing service
  	 * Allow shell_exec module
  * Git-Core
 
-### Configuring apache2 to use git
+### Configuring PHP for LSP
+#### Enable shell_exec function
+In /etc/php/7.3/apache2/php.ini comment the line with ```disable_functions = ...```. And add ```disable_functions = ''```.
+
+### Configuring apache2 for LSP
+#### Run as git
 If you do not configure apache2 to use git, then lsp will not be able to remove the repository when asked to. And would otherwise require sudo elevation.
 
  1. Open /etc/apache2/apache2.conf with your favorite editor
@@ -38,15 +43,29 @@ If you do not configure apache2 to use git, then lsp will not be able to remove 
  5. Insert ```Group git```
  6. Restart the service ```sudo service apache2 restart```
 
-### Import your application ssh key to allow updates.
-By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
+#### Configuring WebDAV
+For LSP to provide http access to your application repository, you will need to enable WebDAV.
 
 ```bash
-ssh-keygen -t rsa
-ssh-copy-id git@[host]
+sudo a2enmod dav_fs
 ```
+We also need to add this configuration file (git.conf).
+```bash
+Alias /git [local directory]/git
 
-Note: I'll need to figure out a way to allow http request instead to remove this requirement.
+<Directory [local directory]/git>
+  Options +Indexes
+  DAV on
+</Directory>
+```
+And enable it:
+```bash
+sudo a2enconf git
+```
+Finally we restart apache2:
+```bash
+sudo service apache2 restart
+```
 
 ## Requirements for the LSP Class
  * PHP (Important)
@@ -98,7 +117,7 @@ exit;
 LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so.
 
 ```bash
-git clone git@[host]:[local directory]/git/[App Name].git
+git clone [host]/git/[App Name].git
 ```
 
 This setup will allow you to use git to provide updates to your application. Git is really useful to update the local files since you can preset directory or files that should be ignored using a .gitignore file in your repository. But what do we do for a mysql database. LSP comes with a method that allow us to compare a json file with your database structure and alter your database to match the json file. You can create the JSON file like this. Bare in mind that LSP will still require a valide license to create the file.
