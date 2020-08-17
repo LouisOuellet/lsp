@@ -246,7 +246,8 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 				for ($x = 1; $x <= $_POST['amount']; $x++) {
 					$key=implode("-", str_split(md5($_GET['name'].$x.date("Y/m/d h:i:s")), 4));
 					$keys[$key]=[
-						'hash' => password_hash($key, PASSWORD_DEFAULT),
+						'key' => $key,
+						'hash' => password_hash(md5($key), PASSWORD_DEFAULT),
 						'status' => FALSE,
 						'active' => FALSE,
 					];
@@ -619,7 +620,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								    <tbody>
 											<?php foreach(json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['name'].'/keys.json'),true) as $key => $value){ ?>
 								        <tr>
-							            <td><?=$key?></td>
+							            <td><?=$value['key']?></td>
 													<td>
 														<form method="post">
 															<?php if($value['status']){ ?>
