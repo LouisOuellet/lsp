@@ -844,17 +844,17 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 							<div class="row">
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="far fa-question-circle"></i></h1>
-									<h2 class="text-center">Get Started</h2>
+									<h2 class="text-center border-bottom">Get Started</h2>
 									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
 								</div>
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="fas fa-key"></i></h1>
-									<h2 class="text-center">License Services</h2>
+									<h2 class="text-center border-bottom mb-3">License Services</h2>
 									<p class="text-justify">LSP makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app. By default, all license are disabled during creation. They will need to be Enabled for an application to authenticate it's license and activate it. Licenses are limited to 1 per instance of the application.</p>
 								</div>
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="fas fa-code-branch"></i></h1>
-									<h2 class="text-center">Update Services</h2>
+									<h2 class="text-center mb-3">Update Services</h2>
 									<p class="text-justify">LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will take care of the rest.</p>
 								</div>
 							</div>
