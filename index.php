@@ -845,7 +845,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="far fa-question-circle"></i></h1>
 									<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Get Started</h2>
-									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class to your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
+									<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class in your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
 								</div>
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="fas fa-key"></i></h1>
@@ -855,7 +855,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 								<div class="col-md-4">
 									<h1 class="display-3 text-center"><i class="fas fa-code-branch"></i></h1>
 									<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Update Services</h2>
-									<p class="text-justify">LSP support a git server. This allows you to host your own git and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will take care of the rest.</p>
+									<p class="text-justify">LSP support a git server. This allows you to host your own git repositories and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will takes care of the rest.</p>
 								</div>
 							</div>
 						</div>
@@ -864,7 +864,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 	    </main>
 	    <footer class="footer mt-auto py-3" style="padding:10px;background-color:#ccc;">
 	      <div class="float-right d-none d-sm-block">
-	        <b>Version</b> 1.1-0
+	        <b>Version</b> 1.1-0.2020-08-17
 	      </div>
 	      <strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://albice.com">ALB Compagnie International Inc.</a></strong> All rights reserved.
 	    </footer>
