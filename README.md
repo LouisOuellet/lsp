@@ -7,6 +7,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-17] - Adding license validation to the activation process.
  * [2020-08-17] - General code optimization.
  * [2020-08-17] - Improved documentation in README.md.
+ * [2020-08-17] - Adding support for git request over http.
  * [2020-08-14] - Added support for Git clone using ssh.
  * [2020-08-14] - Added a MySQL Database Structure backup method to LSP.
  * [2020-08-14] - Added a MySQL Database Structure import method to LSP.
@@ -30,7 +31,14 @@ This software provide licensing services for applications. The licensing service
 
 ### Configuring PHP for LSP
 #### Enable shell_exec function
-In /etc/php/7.3/apache2/php.ini comment the line with ```disable_functions = ...```. And add ```disable_functions = ''```.
+In /etc/php/7.3/apache2/php.ini comment the line :
+```php
+disable_functions = ...
+```
+And add :
+```php
+disable_functions = ''
+```
 
 ### Configuring apache2 for LSP
 #### Run as git
@@ -65,6 +73,12 @@ sudo a2enconf git
 Finally we restart apache2:
 ```bash
 sudo service apache2 restart
+```
+### Import your application ssh key to allow updates via SSH instead
+By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
+```bash
+ssh-keygen -t rsa
+ssh-copy-id git@[host]
 ```
 
 ## Requirements for the LSP Class
@@ -114,10 +128,14 @@ exit;
 ```
 ### Update Service
 #### Basics
-LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so.
+LSP creates a repository for each application that can be use to store your application. Thus if you choose to do this, you can access the repository like so:
 
 ```bash
 git clone [host]/git/[App Name].git
+```
+Or :
+```bash
+git clone git@[host]:[local directory]/git/[App Name].git
 ```
 
 This setup will allow you to use git to provide updates to your application. Git is really useful to update the local files since you can preset directory or files that should be ignored using a .gitignore file in your repository. But what do we do for a mysql database. LSP comes with a method that allow us to compare a json file with your database structure and alter your database to match the json file. You can create the JSON file like this. Bare in mind that LSP will still require a valide license to create the file.
