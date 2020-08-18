@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
+if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'],$_GET['from'])){
 	if(file_exists(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json')){
 		$keys=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json'),true);
 		$app=json_decode(file_get_contents(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/app.json'),true);
@@ -16,6 +16,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 				case"activate":
 					if(!$keys[$_GET['license']]['active']){
 						$keys[$_GET['license']]['active']=TRUE;
+						$keys[$_GET['license']]['ip']=$_GET['from'];
 						$keys[$_GET['license']]['fingerprint']=password_hash($_GET['fingerprint'], PASSWORD_DEFAULT);
 						unlink(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json');
 						$json = fopen(dirname(__FILE__,1).'/apps/'.$_GET['app'].'/keys.json', 'w');
@@ -226,11 +227,10 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 				if(!is_dir(dirname(__FILE__,1).'/apps/'.$_POST['name'])){
 					mkdir(dirname(__FILE__,1).'/apps/'.$_POST['name']);
 					mkdir(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
-					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
+					shell_exec("git init --bare '".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git'."'");
 					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/objects/info/packs', 'w');
 					fwrite($file, json_encode("\n"));
 					fclose($file);
-					shell_exec("git init --bare ".dirname(__FILE__,1).'/git/'.$_POST['name'].'.git');
 					$file = fopen(dirname(__FILE__,1).'/git/'.$_POST['name'].'.git/info/refs', 'w');
 					fwrite($file, json_encode(""));
 					fclose($file);
@@ -338,8 +338,8 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'])){
 		}
 		if(isset($_POST['DeleteApp'])){
 			if(is_dir(dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp'])){
-				shell_exec("rm -rf ".dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp']);
-				shell_exec("rm -rf ".dirname(__FILE__,1).'/git/'.$_POST['DeleteApp'].'.git');
+				shell_exec("rm -rf '".dirname(__FILE__,1).'/apps/'.$_POST['DeleteApp']."'");
+				shell_exec("rm -rf '".dirname(__FILE__,1).'/git/'.$_POST['DeleteApp'].'.git'."'");
 			}
 		}
 		if(isset($_POST['DeleteUser'])){

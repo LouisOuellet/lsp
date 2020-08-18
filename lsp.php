@@ -8,6 +8,7 @@ class LSP {
 	private $App;
 	private $License;
 	private $Hash;
+	private $IP;
 	private $connection;
 	private $query;
 	private $database;
@@ -21,6 +22,7 @@ class LSP {
 		$this->App = $app;
 		$this->License = md5($license);
 		$this->Hash = $hash;
+		$this->IP = $this->get_client_ip();
 		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
 			$this->Update = TRUE;
 		}
@@ -31,10 +33,30 @@ class LSP {
 		}
 	}
 
+	private function get_client_ip() {
+	  $ipaddress = '';
+	  if(getenv('HTTP_CLIENT_IP')){
+	    $ipaddress = getenv('HTTP_CLIENT_IP');
+	  } elseif(getenv('HTTP_X_FORWARDED_FOR')){
+	    $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+	  } elseif(getenv('HTTP_X_FORWARDED')){
+	    $ipaddress = getenv('HTTP_X_FORWARDED');
+	  } elseif(getenv('HTTP_FORWARDED_FOR')){
+	    $ipaddress = getenv('HTTP_FORWARDED_FOR');
+	  } elseif(getenv('HTTP_FORWARDED')){
+	    $ipaddress = getenv('HTTP_FORWARDED');
+	  } elseif(getenv('REMOTE_ADDR')){
+	    $ipaddress = getenv('REMOTE_ADDR');
+	  } else {
+	    $ipaddress = 'UNKNOWN';
+		}
+	  return $ipaddress;
+	}
+
 	public function validate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
-			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&action=validate');
+			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&from='.$this->IP.'&action=validate');
 			curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, 1);
 			$this->Token = curl_exec($this->cURL);
 			curl_close($this->cURL);
@@ -47,7 +69,7 @@ class LSP {
 	public function activate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
-			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&action=activate');
+			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&from='.$this->IP.'&action=activate');
 			curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, 1);
 			$this->Token = curl_exec($this->cURL);
 			curl_close($this->cURL);
