@@ -9,6 +9,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-09-04] - Adding the createRecords methods to the LSP class. To generate a database backup json file.
  * [2020-09-04] - Adding the insertRecords methods to the LSP class. To import a database backup from a json file.
  * [2020-09-04] - Made a modification to the application fingerprint.
+ * [2020-09-04] - Fixed an issue where the SSH clone would display the SERVER_ADDR instead of HTTP_HOST.
  * [2020-08-18] - Adding Remote IP to license during activation.
  * [2020-08-17] - Improved encryption of the license during request. To prevent sniffing attacks.
  * [2020-08-17] - Adding license validation to the activation process.
