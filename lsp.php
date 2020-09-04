@@ -26,7 +26,7 @@ class LSP {
 		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
 			$this->Update = TRUE;
 		}
-		$this->Fingerprint = md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_SOFTWARE'].$_SERVER['DOCUMENT_ROOT'].$_SERVER['SCRIPT_FILENAME'].$_SERVER['GATEWAY_INTERFACE'].$_SERVER['PATH']);
+		$this->Fingerprint = md5($_SERVER['SERVER_NAME'].$_SERVER['SERVER_SOFTWARE'].$_SERVER['DOCUMENT_ROOT'].$_SERVER['SCRIPT_FILENAME'].$_SERVER['GATEWAY_INTERFACE'].$_SERVER['PATH']);
 		$this->validate();
 		if(!$this->Status){
 			$this->activate();
@@ -166,7 +166,58 @@ class LSP {
     return 'b';
 	}
 
-	public function update($branch = "master"){
+  private function lastInsertID() {
+  	return $this->connection->insert_id;
+  }
+
+	private function numRows() {
+		$this->query->store_result();
+		return $this->query->num_rows;
+	}
+
+  private function getTables($database){
+    $tables = $this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ?', $database)->fetchAll();
+    $results = [];
+    foreach($tables as $table){
+			if(!in_array($table['TABLE_NAME'],$results)){
+      	array_push($results,$table['TABLE_NAME']);
+			}
+    }
+    return $results;
+  }
+
+	private function getHeaders($table){
+    $headers = $this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?', $table,$this->database)->fetchAll();
+    $results = [];
+    foreach($headers as $header){
+      array_push($results,$header['COLUMN_NAME']);
+    }
+    return $results;
+  }
+
+  private function create($fields, $table){
+    $this->query('INSERT INTO '.$table.' (id,created,modified) VALUES (?,?,?)', $fields['id'],date("Y-m-d H:i:s"), date("Y-m-d H:i:s"));
+		$headers = $this->getHeaders($table);
+    foreach($fields as $key => $val){
+      if((in_array($key,$headers))&&($key != 'id')){
+        $this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$fields['id']);
+      }
+    }
+    return $fields['id'];
+  }
+
+  private function save($fields, $table){
+		$id = $fields['id'];
+		$headers = $this->getHeaders($table);
+		foreach($fields as $key => $val){
+			if((in_array($key,$headers))&&($key != 'id')){
+				$this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$id);
+			}
+		}
+		$this->query('UPDATE '.$table.' SET `modified` = ? WHERE id = ?',date("Y-m-d H:i:s"),$id);
+  }
+
+	public function updateFiles($branch = "master"){
 		if($this->Status){
 			if($this->Update){
 				shell_exec("git pull origin $branch");
@@ -174,7 +225,7 @@ class LSP {
 		}
 	}
 
-	public function create($file){
+	public function createStruture($file){
 		if($this->Status){
 			foreach($this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ?',$this->database)->fetchAll() as $fields){
 				$structures[$fields['TABLE_NAME']][$fields['COLUMN_NAME']]['order'] = $fields['ORDINAL_POSITION'];
@@ -187,7 +238,7 @@ class LSP {
 		}
 	}
 
-	public function updatedb($json){
+	public function updateStructure($json){
 		if($this->Status){
 			$structures = json_decode(file_get_contents($json),true);
 			foreach($this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ?',$this->database)->fetchAll() as $fields){
@@ -217,6 +268,35 @@ class LSP {
 						if((is_int($col_order))&&($col) != 'id'){
 							$this->query('ALTER TABLE `'.$table_name.'` ADD `'.$col.'` '.$structures[$table_name][$col]['type']);
 						}
+					}
+				}
+			}
+		}
+	}
+
+	public function createRecords($file){
+		if($this->Status){
+			$tables = $this->getTables($this->database);
+			foreach($tables as $table){
+				$records[$table] = $this->query('SELECT * FROM '.$table)->fetchAll();
+			}
+			$json = fopen($file, 'w');
+			fwrite($json, json_encode($records));
+			fclose($json);
+		}
+	}
+
+	public function insertRecords($file){
+		if($this->Status){
+			$tables=json_decode(file_get_contents($file),true);
+			foreach($tables as $table => $records){
+				foreach($records as $record){
+					unset($record['created']);
+					unset($record['modified']);
+					if($this->query('SELECT * FROM '.$table.' WHERE id = ?', $record['id'])->numRows() < 1){
+						$this->create($record, $table);
+					} else {
+						$this->save($record, $table);
 					}
 				}
 			}
