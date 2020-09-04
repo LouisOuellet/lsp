@@ -100,15 +100,24 @@ ssh-copy-id git@[host]
 
 ## Testing environment
 ### Hardware
+#### Environment 1
  * Dual-Core Intel® Core™ i5-4310U CPU @ 2.00GHz
  * Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)
  * 7.9 GB memory
  * 471.5 GB storage (SATA SSD)
+#### Environment 2 (Only as Server)
+ * Raspberry Pi 1 model B+
+ * MicroSD Card
 ### Software
+#### Environment 1
  * elementary OS 5.1.7 Hera
  * Apache/2.4.39 (Unix)
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
  * MySQL Ver 15.1 Distrib 10.1.39-MariaDB
+#### Environment 2 (Only as Server)
+ * 2020-05-27-raspios-buster-lite-armhf
+ * Apache/2.4.38 (Raspbian)
+ * PHP 7.3.19-1~deb10u1 (cli) (built: Jul  5 2020 06:46:45) ( NTS )
 
 ## Usage
 ### Licensing
