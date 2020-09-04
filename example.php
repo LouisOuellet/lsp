@@ -14,7 +14,7 @@ if($lsp->Status){
 		// We update the local files
 		$lsp->update('branch');
 		// We start updating our database
-		$lsp->updatedb('db.json');
+		$lsp->updateStructure('db.json');
 	} else {
 		echo 'No Updates Available';
 	}

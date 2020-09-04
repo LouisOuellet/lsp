@@ -1,8 +1,14 @@
 # Licensing Software Platform
 
-This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check.
+This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check. LSP also include a builtin git server. This along with the use of the LSP class allows a developer to concentrate on developing the core features of his application. If you are developing an application not based on PHP, you can still use the Licensing Service and the Git service that LSP offers.
 
 ## Change Log
+ * [2020-09-04] - Adding various SQL methods to the LSP class.
+ * [2020-09-04] - Adding the createStruture methods to the LSP class. To generate a database structure json file.
+ * [2020-09-04] - Adding the updateStruture methods to the LSP class. To update a database structure from a json file.
+ * [2020-09-04] - Adding the createRecords methods to the LSP class. To generate a database backup json file.
+ * [2020-09-04] - Adding the insertRecords methods to the LSP class. To import a database backup from a json file.
+ * [2020-09-04] - Made a modification to the application fingerprint.
  * [2020-08-18] - Adding Remote IP to license during activation.
  * [2020-08-17] - Improved encryption of the license during request. To prevent sniffing attacks.
  * [2020-08-17] - Adding license validation to the activation process.
@@ -154,7 +160,66 @@ $lsp = new LSP('host','application','key','token');
 // We configure our database access
 $lsp->configdb('host', 'username', 'password', 'example');
 // We backup the database structure in a JSON file
-$lsp->create('db.json');
+$lsp->createStructure('db.json');
+```
+
+Now to import your database structure, you will need the updateStructure method.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+// We configure our database access
+$lsp->configdb('host', 'username', 'password', 'example');
+// We update the database structure with a JSON file
+$lsp->updateStructure('db.json');
+```
+
+Ok now that we covered the database structure. What about the records in the database? Here is how we export the records.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+// We configure our database access
+$lsp->configdb('host', 'username', 'password', 'example');
+// We backup the database records in a JSON file
+$lsp->createRecords('db.json');
+```
+
+And now to import.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+// We configure our database access
+$lsp->configdb('host', 'username', 'password', 'example');
+// We import records to the database using a JSON file
+$lsp->insertRecords('db.json');
+```
+
+From there we can create an installation script to create our initial database. Note that this does not cover the creation of the SQL database and user privileges.
+
+```php
+// We need to include the LSP Class
+require_once('lsp.php');
+// Checks are done by verifying if the server replied and validating it's reply against the hash.
+$lsp = new LSP('host','application','key','token');
+// We configure our database access
+$lsp->configdb('host', 'username', 'password', 'example');
+// We update the database structure with a JSON file
+$lsp->updateStructure('structure.json');
+// We import skeleton records to the database using a JSON file.
+// Usually a skeleton contains records that are necessary for the application to work.
+$lsp->insertRecords('skeleton.json');
+// EXTRA
+// We import sample data to the database using a JSON file
+// Usually sample data is used to provide a demo of the application by creating various records.
+$lsp->insertRecords('sample.json');
 ```
 
 #### Example
@@ -175,7 +240,7 @@ if($lsp->Update){
 	// We update the local files
 	$lsp->update();
 	// We start updating our database
-	$lsp->updatedb('db.json');
+	$lsp->updateStructure('db.json');
 } else {
 	echo 'No update available';
 }
