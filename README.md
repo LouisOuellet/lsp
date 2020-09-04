@@ -114,7 +114,7 @@ ssh-copy-id git@[host]
 #### Basics
 ```php
 require_once('lsp.php');
-$lsp = new LSP($LSP_server,$LSP_app,$LSP_license,$LSP_token);
+$lsp = new LSP('host','application','key','token');
 ```
 
 #### Example

@@ -585,7 +585,7 @@ if(isset($_GET['license'],$_GET['app'],$_GET['fingerprint'],$_GET['action'],$_GE
 																			<i class="fas fa-lock mr-2"></i>SSH
 																		</span>
 																	</div>
-																	<input type="text" class="form-control" value="git@<?=$_SERVER['SERVER_ADDR']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?>" >
+																	<input type="text" class="form-control" value="git@<?=$_SERVER['HTTP_HOST']?>:<?=dirname(__FILE__,1).'/git/'.$_GET['name'].'.git'?>" >
 																</div>
 															</div>
 														</div>
