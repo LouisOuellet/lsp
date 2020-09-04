@@ -237,10 +237,14 @@ if($lsp->Update){
 	echo 'Start Updating';
 	// We configure our database access
 	$lsp->configdb('host', 'username', 'password', 'example');
+	// We backup the database using a JSON file.
+	$lsp->createRecords('backup.json');
 	// We update the local files
 	$lsp->update();
 	// We start updating our database
 	$lsp->updateStructure('db.json');
+	// We import skeleton records to the database using a JSON file.
+	$lsp->insertRecords('skeleton.json');
 } else {
 	echo 'No update available';
 }
