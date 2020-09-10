@@ -3,6 +3,10 @@
 This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check. LSP also include a builtin git server. This along with the use of the LSP class allows a developer to concentrate on developing the core features of his application. If you are developing an application not based on PHP, you can still use the Licensing Service and the Git service that LSP offers.
 
 ## Change Log
+ * [2020-09-09] - Fix an apache2 configuration for the git server
+ * [2020-09-09] - Added relevant documentation in the README.MD file
+ * [2020-09-08] - Adding the ability to force to insert records as new records.
+ * [2020-09-08] - Added the ability to specify which table to export records from.
  * [2020-09-04] - Adding various SQL methods to the LSP class.
  * [2020-09-04] - Adding the createStruture methods to the LSP class. To generate a database structure json file.
  * [2020-09-04] - Adding the updateStruture methods to the LSP class. To update a database structure from a json file.
@@ -62,7 +66,14 @@ If you do not configure apache2 to use git, then lsp will not be able to remove 
  5. Insert ```Group git```
  6. Restart the service ```sudo service apache2 restart```
 
-#### Configuring WebDAV
+#### To use another user other then "git"
+You’ll need to set the Unix user group of the [local directory]/git directories to www-data so your web server can read- and write-access the repositories, because the Apache instance running the CGI script will (by default) be running as that user:
+
+```bash
+chgrp -R www-data [local directory]/git
+```
+
+#### Configuring WebDAV and Apache2
 For LSP to provide http access to your application repository, you will need to enable WebDAV.
 
 ```bash
@@ -70,6 +81,20 @@ sudo a2enmod dav_fs
 ```
 We also need to add this configuration file (git.conf).
 ```bash
+Mutex flock
+
+SetEnv GIT_PROJECT_ROOT [local directory]/git
+SetEnv GIT_HTTP_EXPORT_ALL
+ScriptAlias /git/ /usr/lib/git-core/git-http-backend/
+
+<Files "git-http-backend">
+    AuthType Basic
+    AuthName "Git Access"
+    AuthUserFile [local directory]/git/.htpasswd
+    Require expr !(%{QUERY_STRING} -strmatch '*service=git-receive-pack*' || %{REQUEST_URI} =~ m#/git-receive-pack$#)
+    Require valid-user
+</Files>
+
 Alias /git [local directory]/git
 
 <Directory [local directory]/git>
@@ -85,6 +110,12 @@ Finally we restart apache2:
 ```bash
 sudo service apache2 restart
 ```
+
+That will require you to create a .htpasswd file containing the passwords of all the valid users. Here is an example of adding a “schacon” user to the file:
+```bash
+htpasswd -c [local directory]/git/.htpasswd schacon
+```
+
 ### Import your application ssh key to allow updates via SSH instead
 By default, a ssh connection will require a password to be entered. This can prevent lsp from being able to pull the changes. Therefor, you need to copy your public ssh key to the lsp server.
 ```bash
