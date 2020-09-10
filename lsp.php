@@ -14,6 +14,7 @@ class LSP {
 	private $database;
   private $show_errors = TRUE;
   private $query_closed = TRUE;
+  private $Branch = 'master';
 	public $Status = FALSE;
 	public $Update = FALSE;
 
@@ -23,7 +24,8 @@ class LSP {
 		$this->License = md5($license);
 		$this->Hash = $hash;
 		$this->IP = $this->get_client_ip();
-		if(strpos(shell_exec("git status -sb"), 'behind') !== false){
+		shell_exec("git fetch origin ".$this->Branch." 2>/dev/null");
+		if(strpos(shell_exec("git status -sb 2>/dev/null"), 'behind') !== false){
 			$this->Update = TRUE;
 		}
 		$this->Fingerprint = md5($_SERVER['SERVER_NAME'].$_SERVER['SERVER_SOFTWARE'].$_SERVER['DOCUMENT_ROOT'].$_SERVER['SCRIPT_FILENAME'].$_SERVER['GATEWAY_INTERFACE'].$_SERVER['PATH']);
@@ -31,6 +33,10 @@ class LSP {
 		if(!$this->Status){
 			$this->activate();
 		}
+	}
+
+	public function setBranch($branch = "master"){
+		$this->Branch = $branch;
 	}
 
 	private function get_client_ip() {
@@ -195,8 +201,13 @@ class LSP {
     return $results;
   }
 
-  private function create($fields, $table){
-    $this->query('INSERT INTO '.$table.' (id,created,modified) VALUES (?,?,?)', $fields['id'],date("Y-m-d H:i:s"), date("Y-m-d H:i:s"));
+  private function create($fields, $table, $new = FALSE){
+		if($new){
+			$this->query('INSERT INTO '.$table.' (created,modified) VALUES (?,?)', date("Y-m-d H:i:s"), date("Y-m-d H:i:s"));
+			$fields['id'] = $this->lastInsertID();
+		} else {
+			$this->query('INSERT INTO '.$table.' (id,created,modified) VALUES (?,?,?)', $fields['id'],date("Y-m-d H:i:s"), date("Y-m-d H:i:s"));
+		}
 		$headers = $this->getHeaders($table);
     foreach($fields as $key => $val){
       if((in_array($key,$headers))&&($key != 'id')){
@@ -217,10 +228,10 @@ class LSP {
 		$this->query('UPDATE '.$table.' SET `modified` = ? WHERE id = ?',date("Y-m-d H:i:s"),$id);
   }
 
-	public function updateFiles($branch = "master"){
+	public function updateFiles(){
 		if($this->Status){
 			if($this->Update){
-				shell_exec("git pull origin $branch");
+				shell_exec("git pull origin ".$this->Branch." 2>/dev/null");
 			}
 		}
 	}
@@ -274,9 +285,9 @@ class LSP {
 		}
 	}
 
-	public function createRecords($file){
+	public function createRecords($file, $tables = []){
 		if($this->Status){
-			$tables = $this->getTables($this->database);
+			if(empty($tables)){ $tables = $this->getTables($this->database); }
 			foreach($tables as $table){
 				$records[$table] = $this->query('SELECT * FROM '.$table)->fetchAll();
 			}
@@ -286,17 +297,21 @@ class LSP {
 		}
 	}
 
-	public function insertRecords($file){
+	public function insertRecords($file, $asNew = FALSE){
 		if($this->Status){
 			$tables=json_decode(file_get_contents($file),true);
 			foreach($tables as $table => $records){
 				foreach($records as $record){
 					unset($record['created']);
 					unset($record['modified']);
-					if($this->query('SELECT * FROM '.$table.' WHERE id = ?', $record['id'])->numRows() < 1){
-						$this->create($record, $table);
+					if(!$asNew){
+						if($this->query('SELECT * FROM '.$table.' WHERE id = ?', $record['id'])->numRows() < 1){
+							$this->create($record, $table);
+						} else {
+							$this->save($record, $table);
+						}
 					} else {
-						$this->save($record, $table);
+						$this->create($record, $table, $asNew);
 					}
 				}
 			}
