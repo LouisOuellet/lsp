@@ -212,6 +212,7 @@ class LSP {
     foreach($fields as $key => $val){
       if((in_array($key,$headers))&&($key != 'id')){
         $this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$fields['id']);
+				set_time_limit(20);
       }
     }
     return $fields['id'];
@@ -223,6 +224,7 @@ class LSP {
 		foreach($fields as $key => $val){
 			if((in_array($key,$headers))&&($key != 'id')){
 				$this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$id);
+				set_time_limit(20);
 			}
 		}
 		$this->query('UPDATE '.$table.' SET `modified` = ? WHERE id = ?',date("Y-m-d H:i:s"),$id);
@@ -231,6 +233,8 @@ class LSP {
 	public function updateFiles(){
 		if($this->Status){
 			if($this->Update){
+				shell_exec("git stash 2>/dev/null");
+				shell_exec("git reset --hard origin/".$this->Branch." 2>/dev/null");
 				shell_exec("git pull origin ".$this->Branch." 2>/dev/null");
 			}
 		}
