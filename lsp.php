@@ -275,13 +275,16 @@ class LSP {
 							} else {
 								$this->query('ALTER TABLE `'.$table_name.'` ADD `'.$column_name.'` '.$structures[$table_name][$column_name]['type'].' AFTER `'.$structures[$table_name][$structures[$table_name][$column_name]['order']-1].'`');
 							}
+							set_time_limit(20);
 						}
 					}
 				} else {
 					$this->query('CREATE TABLE `'.$table_name.'` (id INT NOT NULL AUTO_INCREMENT,PRIMARY KEY (id))');
+					set_time_limit(20);
 					foreach($structures[$table_name] as $col_order => $col){
 						if((is_int($col_order))&&($col) != 'id'){
 							$this->query('ALTER TABLE `'.$table_name.'` ADD `'.$col.'` '.$structures[$table_name][$col]['type']);
+							set_time_limit(20);
 						}
 					}
 				}
