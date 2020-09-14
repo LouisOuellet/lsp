@@ -6,7 +6,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-09-14] - LSP updateFiles method now stashes the changes of the local repository if possible and then resets the local repository. This forces the pull request.
  * [2020-09-14] - Fix an issue where PHP would timeout during importation of large amounts of records. Added a timeout increase to each INSERT and UPDATE queries.
  * [2020-09-11] - Fix an issue where the repository would prevent update due to the changes in folders. LSP will now stash those changes and then apply the pull the changes from the repository.
- * [2020-09-09] - Fix an apache2 configuration for the git server
+ * [2020-09-09] - Fix an apache2 configuration for the git server that was causing apache2 service to fail whenever a repository is being updated.
  * [2020-09-09] - Added relevant documentation in the README.MD file
  * [2020-09-08] - Adding the ability to force to insert records as new records.
  * [2020-09-08] - Added the ability to specify which table to export records from.
