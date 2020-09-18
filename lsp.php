@@ -212,6 +212,7 @@ class LSP {
     foreach($fields as $key => $val){
       if((in_array($key,$headers))&&($key != 'id')){
         $this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$fields['id']);
+				set_time_limit(20);
       }
     }
     return $fields['id'];
@@ -223,14 +224,27 @@ class LSP {
 		foreach($fields as $key => $val){
 			if((in_array($key,$headers))&&($key != 'id')){
 				$this->query('UPDATE '.$table.' SET `'.$key.'` = ? WHERE id = ?',$val,$id);
+				set_time_limit(20);
 			}
 		}
 		$this->query('UPDATE '.$table.' SET `modified` = ? WHERE id = ?',date("Y-m-d H:i:s"),$id);
   }
 
+	public function chgBranch($branch = 'master'){
+		if($this->Status){
+			$this->Branch = $branch;
+			shell_exec("git fetch origin ".$this->Branch." 2>/dev/null");
+			if(strpos(shell_exec("git status -sb 2>/dev/null"), 'behind') !== false){
+				$this->Update = TRUE;
+			}
+		}
+	}
+
 	public function updateFiles(){
 		if($this->Status){
 			if($this->Update){
+				shell_exec("git stash 2>/dev/null");
+				shell_exec("git reset --hard origin/".$this->Branch." 2>/dev/null");
 				shell_exec("git pull origin ".$this->Branch." 2>/dev/null");
 			}
 		}
@@ -271,13 +285,16 @@ class LSP {
 							} else {
 								$this->query('ALTER TABLE `'.$table_name.'` ADD `'.$column_name.'` '.$structures[$table_name][$column_name]['type'].' AFTER `'.$structures[$table_name][$structures[$table_name][$column_name]['order']-1].'`');
 							}
+							set_time_limit(20);
 						}
 					}
 				} else {
 					$this->query('CREATE TABLE `'.$table_name.'` (id INT NOT NULL AUTO_INCREMENT,PRIMARY KEY (id))');
+					set_time_limit(20);
 					foreach($structures[$table_name] as $col_order => $col){
 						if((is_int($col_order))&&($col) != 'id'){
 							$this->query('ALTER TABLE `'.$table_name.'` ADD `'.$col.'` '.$structures[$table_name][$col]['type']);
+							set_time_limit(20);
 						}
 					}
 				}
