@@ -230,6 +230,16 @@ class LSP {
 		$this->query('UPDATE '.$table.' SET `modified` = ? WHERE id = ?',date("Y-m-d H:i:s"),$id);
   }
 
+	public function chgBranch($branch = 'master'){
+		if($this->Status){
+			$this->Branch = $branch;
+			shell_exec("git fetch origin ".$this->Branch." 2>/dev/null");
+			if(strpos(shell_exec("git status -sb 2>/dev/null"), 'behind') !== false){
+				$this->Update = TRUE;
+			}
+		}
+	}
+
 	public function updateFiles(){
 		if($this->Status){
 			if($this->Update){
