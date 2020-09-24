@@ -62,9 +62,12 @@ class LSP {
 	public function validate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
-			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&from='.$this->IP.'&action=validate');
+			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'api.php');
+			curl_setopt($this->cURL, CURLOPT_POST, 1);
+			curl_setopt($this->cURL, CURLOPT_POSTFIELDS, "app=".$this->App."&license=".$this->License."&fingerprint=".$this->Fingerprint."&ip=".$this->IP."&request=validate");
 			curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, 1);
-			$this->Token = curl_exec($this->cURL);
+			$answer = json_decode(curl_exec($this->cURL));
+			$this->Token = $answer['token'];
 			curl_close($this->cURL);
 			if(($this->Token.$this->Hash != '')&&(password_verify($this->Token, $this->Hash))){
 				$this->Status = TRUE;
@@ -75,9 +78,12 @@ class LSP {
 	public function activate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
-			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'?app='.$this->App.'&license='.$this->License.'&fingerprint='.$this->Fingerprint.'&from='.$this->IP.'&action=activate');
+			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'api.php');
+			curl_setopt($this->cURL, CURLOPT_POST, 1);
+			curl_setopt($this->cURL, CURLOPT_POSTFIELDS, "app=".$this->App."&license=".$this->License."&fingerprint=".$this->Fingerprint."&ip=".$this->IP."&request=activate");
 			curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, 1);
-			$this->Token = curl_exec($this->cURL);
+			$answer = json_decode(curl_exec($this->cURL));
+			$this->Token = $answer['token'];
 			curl_close($this->cURL);
 			if(($this->Token.$this->Hash != '')&&(password_verify($this->Token, $this->Hash))){
 				$this->Status = TRUE;

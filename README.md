@@ -3,6 +3,12 @@
 This software provide licensing services for applications. The licensing service performs 3 checks. When you create your application in LSP, it will generate an application token which will need to be stored within your application as a hash. Once your application is created, you can start generating licenses. License authentication works as followed. Your application will send a cURL request to the LSP server with the included license and a fingerprint of the application. The LSP server will then try to identify it this license exist in its database and only reply when one is found and validated. Then it will verify the application fingerprint against the activation fingerprint. If all is successful it will reply with the Application Token. Which you can then be tested locally in the application to validate the LSP server as a 3rd check. LSP also include a builtin git server. This along with the use of the LSP class allows a developer to concentrate on developing the core features of his application. If you are developing an application not based on PHP, you can still use the Licensing Service and the Git service that LSP offers.
 
 ## Change Log
+ * [2020-09-24] - Added a new API.
+ * [2020-09-24] - Complete rewrite of the web interface to be more responsive and transfer all calls to the API and JavaScript.
+ * [2020-09-24] - Revamped the login page.
+ * [2020-09-24] - Added a new logo.
+ * [2020-09-24] - modified the LSP class to match the new changes with the API.
+ * [2020-09-24] - Added the README.md file to the app page.
  * [2020-09-16] - Added a chgBranch method to change the repository branch.
  * [2020-09-14] - LSP updateFiles method now stashes the changes of the local repository if possible and then resets the local repository. This forces the pull request.
  * [2020-09-14] - Fix an issue where PHP would timeout during importation of large amounts of records. Added a timeout increase to each INSERT and UPDATE queries.
@@ -140,15 +146,18 @@ ssh-copy-id git@[host]
  * Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)
  * 7.9 GB memory
  * 471.5 GB storage (SATA SSD)
+
 #### Environment 2 (Only as Server)
  * Raspberry Pi 1 model B+
  * MicroSD Card
+
 ### Software
 #### Environment 1
  * elementary OS 5.1.7 Hera
  * Apache/2.4.39 (Unix)
  * PHP 7.3.5 (cli) (built: May  3 2019 11:55:32) ( NTS )
  * MySQL Ver 15.1 Distrib 10.1.39-MariaDB
+
 #### Environment 2 (Only as Server)
  * 2020-05-27-raspios-buster-lite-armhf
  * Apache/2.4.38 (Raspbian)
