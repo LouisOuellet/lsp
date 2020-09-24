@@ -51,7 +51,7 @@ if($API->Login){
 				<button class="btn btn-lg btn-success btn-block" type="submit">Create</button>
 			<?php } ?>
       <p class="mt-5 mb-3 text-muted">
-				<strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://laswitchtech.com">Les Entreprises LaswitchTech Inc.</a></strong> All rights reserved.
+				<strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://albice.com">ALB Compagnie International Inc.</a></strong> All rights reserved.
 			</p>
     </form>
 	</body>

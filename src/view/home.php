@@ -11,17 +11,31 @@
 		<div class="col-md-4">
 			<h1 class="display-3 text-center"><i class="far fa-question-circle"></i></h1>
 			<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Get Started</h2>
-			<p class="text-justify">To get started, you need to create your first application and generate some key(s). Additionnaly for PHP applications you can use the included LSP class in your application as described on <i class="fab fa-github mr-1"></i>GitHub.</p>
+			<p class="text-justify">
+				To get started, you need to create your first application and generate some key(s).
+				Additionnaly for PHP applications you can use the included LSP class in your application
+				as described on <i class="fab fa-github mr-1"></i>GitHub.
+			</p>
 		</div>
 		<div class="col-md-4">
 			<h1 class="display-3 text-center"><i class="fas fa-key"></i></h1>
 			<h2 class="text-center border-bottom border-secondary mb-3 pb-2">License Services</h2>
-			<p class="text-justify">LSP makes use of cURL to provide a licensing access to your application. It can also generate a list of keys for a given app. By default, all license are disabled during creation. They will need to be Enabled for an application to authenticate it's license and activate it. Licenses are limited to 1 per instance of the application.</p>
+			<p class="text-justify">
+				LSP makes use of cURL to provide a licensing access to your application. It can also
+				generate a list of keys for a given app. By default, all license are disabled during
+				creation. They will need to be Enabled for an application to authenticate it's license
+				and activate it. Licenses are limited to 1 per instance of the application.
+			</p>
 		</div>
 		<div class="col-md-4">
 			<h1 class="display-3 text-center"><i class="fas fa-code-branch"></i></h1>
 			<h2 class="text-center border-bottom border-secondary mb-3 pb-2">Update Services</h2>
-			<p class="text-justify">LSP support a git server. This allows you to host your own git repositories and the ability to provide reliable updates. The included LSP classes also offers a method to upgrade your SQL database structure during the update process of your application. This allows you to focus on your application while LSP will takes care of the rest.</p>
+			<p class="text-justify">
+				LSP support a git server. This allows you to host your own git repositories and the
+				ability to provide reliable updates. The included LSP classes also offers a method
+				to upgrade your SQL database structure during the update process of your application.
+				This allows you to focus on your application while LSP will takes care of the rest.
+			</p>
 		</div>
 	</div>
 </div>

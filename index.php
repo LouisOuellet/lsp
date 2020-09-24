@@ -68,7 +68,7 @@ if(!$API->Status){
 			<div class="float-right d-none d-sm-block">
 				<b>Version</b> 2.b.2020-09-23
 			</div>
-			<strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://laswitchtech.com">Les Entreprises LaswitchTech Inc.</a></strong> All rights reserved.
+			<strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="https://albice.com">ALB Compagnie International Inc.</a></strong> All rights reserved.
 		</footer>
 		<script type="text/javascript" language="javascript" src="/dist/js/panel.js"></script>
 	</body>

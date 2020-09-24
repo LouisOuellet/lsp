@@ -8,6 +8,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-09-24] - Revamped the login page.
  * [2020-09-24] - Added a new logo.
  * [2020-09-24] - modified the LSP class to match the new changes with the API.
+ * [2020-09-24] - Added the README.md file to the app page.
  * [2020-09-16] - Added a chgBranch method to change the repository branch.
  * [2020-09-14] - LSP updateFiles method now stashes the changes of the local repository if possible and then resets the local repository. This forces the pull request.
  * [2020-09-14] - Fix an issue where PHP would timeout during importation of large amounts of records. Added a timeout increase to each INSERT and UPDATE queries.
