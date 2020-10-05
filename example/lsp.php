@@ -1,20 +1,19 @@
 <?php
 class LSP {
 
-	private $cURL;
-	private $Token;
-	private $Fingerprint;
-	private $Server;
-	private $App;
-	private $License;
-	private $Hash;
-	private $IP;
-	private $connection;
-	private $query;
-	private $database;
-  private $show_errors = TRUE;
-  private $query_closed = TRUE;
-  private $Branch = 'master';
+	protected $cURL;
+	protected $Token;
+	protected $Fingerprint;
+	protected $Server;
+	protected $App;
+	protected $License;
+	protected $Hash;
+	protected $IP;
+	protected $connection;
+	protected $query;
+	protected $database;
+  protected $query_closed = TRUE;
+  protected $Branch = 'master';
 	public $Status = FALSE;
 	public $Update = FALSE;
 
@@ -39,7 +38,7 @@ class LSP {
 		$this->Branch = $branch;
 	}
 
-	private function get_client_ip() {
+	protected function get_client_ip() {
 	  $ipaddress = '';
 	  if(getenv('HTTP_CLIENT_IP')){
 	    $ipaddress = getenv('HTTP_CLIENT_IP');
@@ -59,7 +58,7 @@ class LSP {
 	  return $ipaddress;
 	}
 
-	public function validate(){
+	protected function validate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
 			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'api.php');
@@ -75,7 +74,7 @@ class LSP {
 		}
 	}
 
-	public function activate(){
+	protected function activate(){
 		if(!$this->Status){
 			$this->cURL = curl_init();
 			curl_setopt($this->cURL, CURLOPT_URL, $this->Server.'api.php');
@@ -100,7 +99,7 @@ class LSP {
 		$this->database = $dbname;
 	}
 
-	private function query($query) {
+	protected function query($query) {
     if (!$this->query_closed) {
       $this->query->close();
     }
@@ -135,7 +134,7 @@ class LSP {
 		return $this;
   }
 
-  private function fetchAll($callback = null) {
+  protected function fetchAll($callback = null) {
     $params = array();
     $row = array();
     $meta = $this->query->result_metadata();
@@ -161,33 +160,27 @@ class LSP {
 		return $result;
 	}
 
-	private function close() {
+	protected function close() {
 		return $this->connection->close();
 	}
 
-	private function error($error) {
-    if ($this->show_errors) {
-      exit($error);
-    }
-  }
-
-	private function _gettype($var) {
+	protected function _gettype($var) {
     if (is_string($var)) return 's';
     if (is_float($var)) return 'd';
     if (is_int($var)) return 'i';
     return 'b';
 	}
 
-  private function lastInsertID() {
+  protected function lastInsertID() {
   	return $this->connection->insert_id;
   }
 
-	private function numRows() {
+	protected function numRows() {
 		$this->query->store_result();
 		return $this->query->num_rows;
 	}
 
-  private function getTables($database){
+  protected function getTables($database){
     $tables = $this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ?', $database)->fetchAll();
     $results = [];
     foreach($tables as $table){
@@ -198,7 +191,7 @@ class LSP {
     return $results;
   }
 
-	private function getHeaders($table){
+	protected function getHeaders($table){
     $headers = $this->query('SELECT * FROM information_schema.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?', $table,$this->database)->fetchAll();
     $results = [];
     foreach($headers as $header){
@@ -207,7 +200,7 @@ class LSP {
     return $results;
   }
 
-  private function create($fields, $table, $new = FALSE){
+  protected function create($fields, $table, $new = FALSE){
 		if($new){
 			$this->query('INSERT INTO '.$table.' (created,modified) VALUES (?,?)', date("Y-m-d H:i:s"), date("Y-m-d H:i:s"));
 			$fields['id'] = $this->lastInsertID();
@@ -224,7 +217,7 @@ class LSP {
     return $fields['id'];
   }
 
-  private function save($fields, $table){
+  protected function save($fields, $table){
 		$id = $fields['id'];
 		$headers = $this->getHeaders($table);
 		foreach($fields as $key => $val){
@@ -264,7 +257,7 @@ class LSP {
 				$structures[$fields['TABLE_NAME']][$fields['ORDINAL_POSITION']] = $fields['COLUMN_NAME'];
 			}
 			$json = fopen($file, 'w');
-			fwrite($json, json_encode($structures));
+			fwrite($json, json_encode($structures, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -315,7 +308,7 @@ class LSP {
 				$records[$table] = $this->query('SELECT * FROM '.$table)->fetchAll();
 			}
 			$json = fopen($file, 'w');
-			fwrite($json, json_encode($records));
+			fwrite($json, json_encode($records, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}

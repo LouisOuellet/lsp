@@ -49,7 +49,7 @@ This software provide licensing services for applications. The licensing service
  * [2020-08-13] - An activation process has been added
 
 ## Requirements for the LSP Server
- * Apache2 => Configured to use the git user
+ * Apache2
  * PHP
  	 * Allow shell_exec module
  * Git-Core

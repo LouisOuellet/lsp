@@ -76,7 +76,7 @@ class API{
 				if(($keys[$license]['active'])&&($keys[$license]['ip']==$ip)){
 					if((password_verify($fingerprint, $keys[$license]['fingerprint']))){
 						$app=json_decode(file_get_contents(dirname(__FILE__,3).'/apps/'.$name.'/app.json'),true);
-						echo json_encode($app['token']);
+						echo json_encode($app['token'], JSON_PRETTY_PRINT);
 						exit;
 					}
 				}
@@ -95,10 +95,10 @@ class API{
 				$keys[$license]['fingerprint']=password_hash($fingerprint, PASSWORD_DEFAULT);
 				unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 				$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-				fwrite($json, json_encode($keys));
+				fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 				fclose($json);
 				$app=json_decode(file_get_contents(dirname(__FILE__,3).'/apps/'.$name.'/app.json'),true);
-				echo json_encode($app['token']);
+				echo json_encode($app['token'], JSON_PRETTY_PRINT);
 				exit;
 			}
 		} else {
@@ -110,7 +110,7 @@ class API{
 		if(file_exists(dirname(__FILE__,3).'/apps/'.$name.'/app.json')){
 			$app = json_decode(file_get_contents(dirname(__FILE__,3).'/apps/'.$name.'/app.json'),true);
 			$app['token'] = password_hash($app['token'], PASSWORD_DEFAULT);
-			echo json_encode($app);
+			echo json_encode($app, JSON_PRETTY_PRINT);
 		}
 	}
 
@@ -124,10 +124,10 @@ class API{
 				mkdir(dirname(__FILE__,3).'/git/'.$name.'.git');
 				shell_exec("git init --bare '".dirname(__FILE__,3).'/git/'.$name.'.git'."'");
 				$file = fopen(dirname(__FILE__,3).'/git/'.$name.'.git/objects/info/packs', 'w');
-				fwrite($file, json_encode("\n"));
+				fwrite($file, json_encode("\n", JSON_PRETTY_PRINT));
 				fclose($file);
 				$file = fopen(dirname(__FILE__,3).'/git/'.$name.'.git/info/refs', 'w');
-				fwrite($file, json_encode(""));
+				fwrite($file, json_encode("", JSON_PRETTY_PRINT));
 				fclose($file);
 				$htaccess=fopen(dirname(__FILE__,3).'/git/'.$name.'.git/.htaccess', 'w');
 				fwrite($htaccess, "Order deny,allow\n");
@@ -135,7 +135,7 @@ class API{
 				fclose($htaccess);
 				$app['token']=md5($name.date("Y/m/d h:i:s"));
 				$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/app.json', 'w');
-				fwrite($json, json_encode($app));
+				fwrite($json, json_encode($app, JSON_PRETTY_PRINT));
 				fclose($json);
 				shell_exec("cd ".dirname(__FILE__,3)."/repos && git clone ".(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER['HTTP_HOST']."/git/".$name.".git");
 			}
@@ -168,7 +168,7 @@ class API{
 				unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			}
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -179,7 +179,7 @@ class API{
 			unset($keys[$key]);
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -190,7 +190,7 @@ class API{
 			$keys[$key]['status']=TRUE;
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -201,7 +201,7 @@ class API{
 			$keys[$key]['status']=FALSE;
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -212,7 +212,7 @@ class API{
 			$keys[$key]['active']=TRUE;
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -223,7 +223,7 @@ class API{
 			$keys[$key]['active']=FALSE;
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -234,7 +234,7 @@ class API{
 			$keys[$key]['owner']=$owner;
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -245,7 +245,7 @@ class API{
 			unset($keys[$key]['owner']);
 			unlink(dirname(__FILE__,3).'/apps/'.$name.'/keys.json');
 			$json = fopen(dirname(__FILE__,3).'/apps/'.$name.'/keys.json', 'w');
-			fwrite($json, json_encode($keys));
+			fwrite($json, json_encode($keys, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -253,7 +253,7 @@ class API{
 	public function getUser($name){
 		if(file_exists(dirname(__FILE__,3).'/users/'.$name.'.json')){
 			$user = json_decode(file_get_contents(dirname(__FILE__,3).'/users/'.$name.'.json'),true);
-			echo json_encode($user);
+			echo json_encode($user, JSON_PRETTY_PRINT);
 		}
 	}
 
@@ -264,7 +264,7 @@ class API{
 			}
 			$user['password']=password_hash($pass, PASSWORD_DEFAULT);
 			$json = fopen(dirname(__FILE__,3).'/users/'.$name.'.json', 'w');
-			fwrite($json, json_encode($user));
+			fwrite($json, json_encode($user, JSON_PRETTY_PRINT));
 			fclose($json);
 		}
 	}
@@ -276,7 +276,7 @@ class API{
 				$user['password']=password_hash($pass, PASSWORD_DEFAULT);
 				unlink(dirname(__FILE__,3) . '/users/'.$name.'.json');
 				$json = fopen(dirname(__FILE__,3).'/users/'.$name.'.json', 'w');
-				fwrite($json, json_encode($user));
+				fwrite($json, json_encode($user, JSON_PRETTY_PRINT));
 				fclose($json);
 			}
 		} else {
